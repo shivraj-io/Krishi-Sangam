@@ -1,44 +1,68 @@
-const Farmer = require("../models/Farmer");
-const { PythonShell } = require("python-shell");
-const axios = require("axios");
+const { spawn } = require("child_process");
+const path = require("path");
 
-// POST /api/crop/predict
 exports.predictCrop = async (req, res) => {
   try {
-    const { mobile } = req.body;
-    if (!mobile) return res.status(400).json({ message: "Mobile required" });
+    const { N, P, K, temperature, humidity, ph, rainfall } = req.body;
 
-    // Lookup farmer for location (village/district/state)
-    const farmer = await Farmer.findOne({ mobile });
-    if (!farmer) return res.status(404).json({ message: "Farmer not found" });
+    // Validate required fields
+    if ([N, P, K, temperature, humidity, ph, rainfall].some(v => v === undefined || v === null)) {
+      return res.status(400).json({ 
+        message: "Please provide all required fields: N, P, K, temperature, humidity, ph, and rainfall" 
+      });
+    }
 
-    const { village, district, state } = farmer;
+    // Prepare input data for Python script
+    const inputData = JSON.stringify({ N, P, K, temperature, humidity, ph, rainfall });
+    
+    // Path to Python script
+    const scriptPath = path.join(__dirname, "../ml/predict.py");
+    
+    // Spawn Python process
+    const python = spawn("python", [scriptPath]);
+    
+    let result = "";
+    let error = "";
 
-    // Fetch NPK from Soil Health Card API / website (mocked here)
-    // Example: Replace with actual scraping or official API
-    const npkData = await getNPKFromSHC(mobile, village, district, state);
+    // Send input data to Python script via stdin
+    python.stdin.write(inputData);
+    python.stdin.end();
 
-    const { N, P, K } = npkData;
-
-    // Call Python crop prediction model
-    const args = [N, P, K];
-    PythonShell.run("ml/predict_crop.py", { mode: "text", args }, (err, result) => {
-      if (err) return res.status(500).json({ message: err.message });
-      res.json({ predictedCrop: result[0], N, P, K });
+    // Collect output
+    python.stdout.on("data", (data) => {
+      result += data.toString();
     });
 
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    python.stderr.on("data", (data) => {
+      error += data.toString();
+    });
+
+    // Handle completion
+    python.on("close", (code) => {
+      if (code !== 0 || error) {
+        console.error("Python script error:", error);
+        return res.status(500).json({ 
+          message: "Error running crop prediction model",
+          error: error
+        });
+      }
+
+      try {
+        const prediction = JSON.parse(result.trim());
+        res.json({
+          input: { N, P, K, temperature, humidity, ph, rainfall },
+          ...prediction
+        });
+      } catch (parseError) {
+        console.error("Failed to parse Python output:", result);
+        res.status(500).json({ 
+          message: "Error parsing prediction result",
+          rawOutput: result
+        });
+      }
+    });
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
-
-// Mock function to fetch NPK (replace with scraping / API)
-async function getNPKFromSHC(mobile, village, district, state) {
-  // Example: normally fetch from official soilhealth portal
-  // For prototype, returning random values
-  return {
-    N: 60,
-    P: 30,
-    K: 40
-  };
-}

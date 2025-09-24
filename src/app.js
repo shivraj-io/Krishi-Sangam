@@ -1,6 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
+const bodyParser = require("body-parser");
+const { spawn } = require("child_process");
+
 
 const authRoutes = require("./routes/authRoutes");
 const jobRoutes = require("./routes/jobRoutes");
@@ -13,12 +16,15 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(morgan("dev"));
+app.use(bodyParser.json());
 
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/weather", weatherRoutes);
 app.use("/api/crop", cropRoutes);
+
+
 
 // Default route
 app.get("/", (req, res) => {
