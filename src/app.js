@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
-const { spawn } = require("child_process");
+const yieldRoutes = require("./routes/yieldRoutes");
 
 
 const authRoutes = require("./routes/authRoutes");
@@ -23,6 +23,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/weather", weatherRoutes);
 app.use("/api/crop", cropRoutes);
+app.use("/api/yield", yieldRoutes);
 
 
 
