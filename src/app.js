@@ -2,13 +2,14 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
-const yieldRoutes = require("./routes/yieldRoutes");
 
 
 const authRoutes = require("./routes/authRoutes");
 const jobRoutes = require("./routes/jobRoutes");
 const weatherRoutes = require("./routes/weatherRoutes");
 const cropRoutes = require("./routes/cropRoutes");
+const yieldRoutes = require("./routes/yieldRoutes");
+const LabourRoutes = require("./routes/predictLabourRoutes");
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use("/api/jobs", jobRoutes);
 app.use("/api/weather", weatherRoutes);
 app.use("/api/crop", cropRoutes);
 app.use("/api/yield", yieldRoutes);
+app.use("/api/labour", LabourRoutes);
 
 
 
