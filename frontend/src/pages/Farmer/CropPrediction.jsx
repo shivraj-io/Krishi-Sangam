@@ -1,0 +1,265 @@
+import { useState } from 'react';
+import { cropAPI } from '../../services/api';
+import { SOIL_TYPES, SEASONS } from '../../utils/constants';
+import './CropPrediction.css';
+
+const CropPrediction = () => {
+  const [formData, setFormData] = useState({
+    nitrogen: '',
+    phosphorus: '',
+    potassium: '',
+    temperature: '',
+    humidity: '',
+    ph: '',
+    rainfall: '',
+    soilType: '',
+    season: '',
+  });
+  const [prediction, setPrediction] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      const response = await cropAPI.predictCrop(formData);
+      setPrediction(response.data);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to get prediction. Please try again.');
+      setPrediction(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleReset = () => {
+    setFormData({
+      nitrogen: '',
+      phosphorus: '',
+      potassium: '',
+      temperature: '',
+      humidity: '',
+      ph: '',
+      rainfall: '',
+      soilType: '',
+      season: '',
+    });
+    setPrediction(null);
+    setError('');
+  };
+
+  return (
+    <div className="crop-prediction-container">
+      <div className="prediction-header">
+        <h1>🌾 Crop Prediction</h1>
+        <p>Get AI-powered crop recommendations based on your soil and environmental conditions</p>
+      </div>
+
+      <div className="prediction-content">
+        <div className="prediction-form-section">
+          <h2>Enter Your Parameters</h2>
+          <form onSubmit={handleSubmit} className="prediction-form">
+            <div className="form-section">
+              <h3>Soil Nutrients (kg/ha)</h3>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Nitrogen (N) *</label>
+                  <input
+                    type="number"
+                    name="nitrogen"
+                    value={formData.nitrogen}
+                    onChange={handleChange}
+                    required
+                    placeholder="0-140"
+                    min="0"
+                    max="140"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Phosphorus (P) *</label>
+                  <input
+                    type="number"
+                    name="phosphorus"
+                    value={formData.phosphorus}
+                    onChange={handleChange}
+                    required
+                    placeholder="5-145"
+                    min="0"
+                    max="145"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Potassium (K) *</label>
+                  <input
+                    type="number"
+                    name="potassium"
+                    value={formData.potassium}
+                    onChange={handleChange}
+                    required
+                    placeholder="5-205"
+                    min="0"
+                    max="205"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="form-section">
+              <h3>Environmental Conditions</h3>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Temperature (°C) *</label>
+                  <input
+                    type="number"
+                    name="temperature"
+                    value={formData.temperature}
+                    onChange={handleChange}
+                    required
+                    placeholder="8-45"
+                    step="0.1"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Humidity (%) *</label>
+                  <input
+                    type="number"
+                    name="humidity"
+                    value={formData.humidity}
+                    onChange={handleChange}
+                    required
+                    placeholder="10-100"
+                    min="0"
+                    max="100"
+                  />
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label>pH Value *</label>
+                  <input
+                    type="number"
+                    name="ph"
+                    value={formData.ph}
+                    onChange={handleChange}
+                    required
+                    placeholder="3.5-9.5"
+                    step="0.1"
+                    min="0"
+                    max="14"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Rainfall (mm) *</label>
+                  <input
+                    type="number"
+                    name="rainfall"
+                    value={formData.rainfall}
+                    onChange={handleChange}
+                    required
+                    placeholder="20-300"
+                    step="0.1"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="form-section">
+              <h3>Additional Information</h3>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Soil Type</label>
+                  <select
+                    name="soilType"
+                    value={formData.soilType}
+                    onChange={handleChange}
+                  >
+                    <option value="">Select soil type</option>
+                    {SOIL_TYPES.map(soil => (
+                      <option key={soil} value={soil}>{soil}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Season</label>
+                  <select
+                    name="season"
+                    value={formData.season}
+                    onChange={handleChange}
+                  >
+                    <option value="">Select season</option>
+                    {SEASONS.map(season => (
+                      <option key={season} value={season}>{season}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {error && <div className="error-message">{error}</div>}
+
+            <div className="form-actions">
+              <button type="button" onClick={handleReset} className="btn-reset">
+                Reset
+              </button>
+              <button type="submit" className="btn-predict" disabled={loading}>
+                {loading ? 'Predicting...' : 'Get Prediction'}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        {prediction && (
+          <div className="prediction-result">
+            <h2>Recommended Crops</h2>
+            <div className="recommended-crops">
+              {prediction.crops ? (
+                prediction.crops.map((crop, index) => (
+                  <div key={index} className="crop-card">
+                    <div className="crop-rank">#{index + 1}</div>
+                    <div className="crop-name">{crop.name}</div>
+                    <div className="crop-confidence">
+                      Confidence: {crop.confidence}%
+                    </div>
+                    <div className="crop-details">
+                      <p>{crop.description || 'Suitable for your conditions'}</p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="single-prediction">
+                  <div className="prediction-icon">🌾</div>
+                  <h3>{prediction.crop || 'Rice'}</h3>
+                  <p>Based on your soil and environmental parameters, this crop is most suitable for cultivation.</p>
+                </div>
+              )}
+            </div>
+
+            <div className="prediction-tips">
+              <h3>💡 Cultivation Tips</h3>
+              <ul>
+                <li>Ensure proper soil preparation before sowing</li>
+                <li>Monitor nutrient levels regularly</li>
+                <li>Use appropriate irrigation methods</li>
+                <li>Follow recommended planting seasons</li>
+                <li>Implement pest management strategies</li>
+              </ul>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default CropPrediction;
