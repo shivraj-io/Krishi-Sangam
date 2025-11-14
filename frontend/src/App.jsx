@@ -1,23 +1,24 @@
 import { BrowserRouter as Router } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import Navbar from './components/Common/Navbar';
+import ErrorBoundary from './components/Common/ErrorBoundary';
 import Footer from './components/Common/Footer';
 import AppRoutes from './routes';
 import './App.css';
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <div className="app-container">
-          <Navbar />
-          <main className="main-content">
-            <AppRoutes />
-          </main>
-          <Footer />
-        </div>
-      </Router>
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <Router>
+          <div className="app-container">
+            <main className="main-content">
+              <AppRoutes />
+            </main>
+            <Footer />
+          </div>
+        </Router>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 

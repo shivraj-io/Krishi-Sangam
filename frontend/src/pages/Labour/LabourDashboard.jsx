@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { jobAPI } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import Navbar from '../../components/Common/Navbar';
 import './LabourDashboard.css';
 
 const LabourDashboard = () => {
@@ -41,11 +42,13 @@ const LabourDashboard = () => {
   };
 
   return (
-    <div className="labour-dashboard">
-      <div className="dashboard-header">
-        <h1>Welcome, {user?.name}! 👷</h1>
-        <p>Find and apply for agricultural jobs</p>
-      </div>
+    <>
+      <Navbar />
+      <div className="labour-dashboard">
+        <div className="dashboard-header">
+          <h1>Welcome, {user?.name}! 👷</h1>
+          <p>Find and apply for agricultural jobs</p>
+        </div>
 
       <div className="dashboard-stats">
         <div className="stat-card">
@@ -111,7 +114,11 @@ const LabourDashboard = () => {
                 <div className="job-details">
                   <div className="detail-item">
                     <span className="detail-icon">📍</span>
-                    <span>{job.location}</span>
+                    <span>
+                      {typeof job.location === 'object' 
+                        ? `${job.location.village}, ${job.location.district}`
+                        : job.location}
+                    </span>
                   </div>
                   <div className="detail-item">
                     <span className="detail-icon">⏰</span>
@@ -134,7 +141,8 @@ const LabourDashboard = () => {
           </div>
         )}
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

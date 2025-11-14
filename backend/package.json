@@ -20,6 +20,7 @@
     "mongodb": "^6.19.0",
     "mongoose": "^8.18.1",
     "morgan": "^1.10.1",
+    "nodemon": "^3.1.11",
     "puppeteer": "^24.22.2",
     "python-shell": "^5.0.0"
   }

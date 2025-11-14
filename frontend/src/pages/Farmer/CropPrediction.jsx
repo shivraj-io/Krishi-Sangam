@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { cropAPI } from '../../services/api';
 import { SOIL_TYPES, SEASONS } from '../../utils/constants';
+import Navbar from '../../components/Common/Navbar';
 import './CropPrediction.css';
 
 const CropPrediction = () => {
@@ -32,9 +33,21 @@ const CropPrediction = () => {
     setLoading(true);
 
     try {
-      const response = await cropAPI.predictCrop(formData);
+      // Transform field names to match backend expectations
+      const requestData = {
+        N: parseFloat(formData.nitrogen),
+        P: parseFloat(formData.phosphorus),
+        K: parseFloat(formData.potassium),
+        temperature: parseFloat(formData.temperature),
+        humidity: parseFloat(formData.humidity),
+        ph: parseFloat(formData.ph),
+        rainfall: parseFloat(formData.rainfall),
+      };
+      
+      const response = await cropAPI.predictCrop(requestData);
       setPrediction(response.data);
     } catch (err) {
+      console.error('Crop Prediction Error:', err);
       setError(err.response?.data?.message || 'Failed to get prediction. Please try again.');
       setPrediction(null);
     } finally {
@@ -59,11 +72,13 @@ const CropPrediction = () => {
   };
 
   return (
-    <div className="crop-prediction-container">
-      <div className="prediction-header">
-        <h1>🌾 Crop Prediction</h1>
-        <p>Get AI-powered crop recommendations based on your soil and environmental conditions</p>
-      </div>
+    <>
+      <Navbar />
+      <div className="crop-prediction-container">
+        <div className="prediction-header">
+          <h1>🌾 Crop Prediction</h1>
+          <p>Get AI-powered crop recommendations based on your soil and environmental conditions</p>
+        </div>
 
       <div className="prediction-content">
         <div className="prediction-form-section">
@@ -223,19 +238,30 @@ const CropPrediction = () => {
           <div className="prediction-result">
             <h2>Recommended Crops</h2>
             <div className="recommended-crops">
-              {prediction.crops ? (
-                prediction.crops.map((crop, index) => (
-                  <div key={index} className="crop-card">
-                    <div className="crop-rank">#{index + 1}</div>
-                    <div className="crop-name">{crop.name}</div>
-                    <div className="crop-confidence">
-                      Confidence: {crop.confidence}%
+              {prediction.all_predictions ? (
+                // Show top 3 crops with confidence scores
+                Object.entries(prediction.all_predictions)
+                  .sort((a, b) => b[1] - a[1]) // Sort by confidence descending
+                  .slice(0, 3) // Take top 3
+                  .map(([cropName, confidence], index) => (
+                    <div key={index} className={`crop-card ${index === 0 ? 'top-pick' : ''}`}>
+                      <div className="crop-rank">#{index + 1}</div>
+                      <div className="crop-name">{cropName.charAt(0).toUpperCase() + cropName.slice(1)}</div>
+                      <div className="crop-confidence">
+                        {index === 0 && '⭐ '}Confidence: {(confidence * 100).toFixed(1)}%
+                      </div>
+                      <div className="crop-details">
+                        <p>{index === 0 ? '🏆 Best match for your conditions!' : 'Also suitable for cultivation'}</p>
+                      </div>
                     </div>
-                    <div className="crop-details">
-                      <p>{crop.description || 'Suitable for your conditions'}</p>
-                    </div>
-                  </div>
-                ))
+                  ))
+              ) : prediction.recommended_crop ? (
+                <div className="single-prediction">
+                  <div className="prediction-icon">🌾</div>
+                  <h3>{prediction.recommended_crop.charAt(0).toUpperCase() + prediction.recommended_crop.slice(1)}</h3>
+                  <p>Confidence: {(prediction.confidence * 100).toFixed(1)}%</p>
+                  <p>Based on your soil and environmental parameters, this crop is most suitable for cultivation.</p>
+                </div>
               ) : (
                 <div className="single-prediction">
                   <div className="prediction-icon">🌾</div>
@@ -258,7 +284,8 @@ const CropPrediction = () => {
           </div>
         )}
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

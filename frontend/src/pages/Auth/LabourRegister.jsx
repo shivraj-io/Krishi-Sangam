@@ -6,12 +6,16 @@ import './Auth.css';
 
 const LabourRegister = () => {
   const [formData, setFormData] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
     confirmPassword: '',
     phone: '',
     address: '',
+    village: '',
+    district: '',
+    state: '',
     skills: '',
     experience: '',
   });
@@ -39,14 +43,30 @@ const LabourRegister = () => {
     setLoading(true);
 
     try {
+      // Convert skills string to array
+      const skillsArray = formData.skills
+        .split(',')
+        .map(skill => skill.trim())
+        .filter(skill => skill.length > 0);
+
       const response = await authAPI.registerLabour({
-        name: formData.name,
+        fullName: {
+          firstName: formData.firstName,
+          lastName: formData.lastName
+        },
+        name: `${formData.firstName} ${formData.lastName}`, // For backward compatibility
         email: formData.email,
         password: formData.password,
         phone: formData.phone,
         address: formData.address,
-        skills: formData.skills,
+        location: {
+          village: formData.village,
+          district: formData.district,
+          state: formData.state
+        },
+        skills: skillsArray,
         experience: formData.experience,
+        role: 'labour'
       });
 
       if (response.data.token) {
@@ -70,16 +90,29 @@ const LabourRegister = () => {
         {error && <div className="error-message">{error}</div>}
 
         <form onSubmit={handleSubmit} className="auth-form">
-          <div className="form-group">
-            <label>Full Name *</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              placeholder="Enter your full name"
-            />
+          <div className="form-row">
+            <div className="form-group">
+              <label>First Name *</label>
+              <input
+                type="text"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                required
+                placeholder="Enter first name"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Last Name</label>
+              <input
+                type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                placeholder="Enter last name"
+              />
+            </div>
           </div>
 
           <div className="form-group">
@@ -102,31 +135,72 @@ const LabourRegister = () => {
               value={formData.phone}
               onChange={handleChange}
               required
-              placeholder="Enter your phone number"
+              placeholder="Enter 10-digit phone number"
+              pattern="[0-9]{10}"
+              title="Please enter a valid 10-digit phone number"
             />
           </div>
 
           <div className="form-group">
-            <label>Address *</label>
+            <label>Full Address *</label>
             <textarea
               name="address"
               value={formData.address}
               onChange={handleChange}
               required
-              placeholder="Enter your address"
-              rows="3"
+              placeholder="Enter your complete address"
+              rows="2"
             />
           </div>
 
+          <div className="form-row">
+            <div className="form-group">
+              <label>Village *</label>
+              <input
+                type="text"
+                name="village"
+                value={formData.village}
+                onChange={handleChange}
+                required
+                placeholder="Village name"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>District *</label>
+              <input
+                type="text"
+                name="district"
+                value={formData.district}
+                onChange={handleChange}
+                required
+                placeholder="District name"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>State *</label>
+              <input
+                type="text"
+                name="state"
+                value={formData.state}
+                onChange={handleChange}
+                required
+                placeholder="State name"
+              />
+            </div>
+          </div>
+
           <div className="form-group">
-            <label>Skills</label>
+            <label>Skills (comma separated)</label>
             <input
               type="text"
               name="skills"
               value={formData.skills}
               onChange={handleChange}
-              placeholder="e.g., Plowing, Harvesting, Irrigation"
+              placeholder="e.g., Plowing, Harvesting, Irrigation, Weeding"
             />
+            <small className="form-hint">Enter skills separated by commas</small>
           </div>
 
           <div className="form-group">
@@ -136,7 +210,9 @@ const LabourRegister = () => {
               name="experience"
               value={formData.experience}
               onChange={handleChange}
-              placeholder="Enter years of experience"
+              placeholder="Years of work experience"
+              min="0"
+              max="50"
             />
           </div>
 

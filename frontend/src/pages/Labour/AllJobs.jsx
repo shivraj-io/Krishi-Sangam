@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { jobAPI } from '../../services/api';
+import Navbar from '../../components/Common/Navbar';
 import './AllJobs.css';
 
 const AllJobs = () => {
@@ -78,11 +79,13 @@ const AllJobs = () => {
   const jobTypes = ['Plowing', 'Sowing', 'Harvesting', 'Irrigation', 'Weeding', 'General Labor', 'Others'];
 
   return (
-    <div className="all-jobs-container">
-      <div className="jobs-header">
-        <h1>Available Job Opportunities</h1>
-        <p>Find and apply for agricultural jobs</p>
-      </div>
+    <>
+      <Navbar />
+      <div className="all-jobs-container">
+        <div className="jobs-header">
+          <h1>Available Job Opportunities</h1>
+          <p>Find and apply for agricultural jobs</p>
+        </div>
 
       <div className="filters-section">
         <div className="filter-group">
@@ -150,7 +153,11 @@ const AllJobs = () => {
                     <span className="info-icon">📍</span>
                     <div className="info-content">
                       <div className="info-label">Location</div>
-                      <div className="info-value">{job.location}</div>
+                      <div className="info-value">
+                        {typeof job.location === 'object' 
+                          ? `${job.location.village}, ${job.location.district}, ${job.location.state}`
+                          : job.location}
+                      </div>
                     </div>
                   </div>
                   
@@ -218,7 +225,8 @@ const AllJobs = () => {
           ))}
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 };
 

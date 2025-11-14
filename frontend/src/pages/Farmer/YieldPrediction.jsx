@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Navbar from '../../components/Common/Navbar';
 import './YieldPrediction.css';
 
 const YieldPrediction = () => {
@@ -65,10 +66,12 @@ const YieldPrediction = () => {
   };
 
   return (
-    <div className="yield-prediction-container">
-      <div className="prediction-header">
-        <h1>📊 Yield Prediction</h1>
-        <p>Estimate your crop yield based on various agricultural parameters</p>
+    <>
+      <Navbar />
+      <div className="yield-prediction-container">
+        <div className="prediction-header">
+          <h1>📊 Yield Prediction</h1>
+          <p>Estimate your crop yield based on various agricultural parameters</p>
       </div>
 
       <div className="prediction-content">
@@ -227,7 +230,8 @@ const YieldPrediction = () => {
           </div>
         )}
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

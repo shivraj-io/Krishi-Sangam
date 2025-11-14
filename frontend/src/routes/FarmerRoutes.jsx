@@ -4,6 +4,8 @@ import FarmerDashboard from '../pages/Farmer/FarmerDashboard';
 import CreateJob from '../pages/Farmer/CreateJob';
 import Weather from '../pages/Farmer/Weather';
 import CropPrediction from '../pages/Farmer/CropPrediction';
+import YieldPrediction from '../pages/Farmer/YieldPrediction';
+import LabourRecommendation from '../pages/Farmer/LabourRecommendation';
 
 const FarmerRoutes = () => {
   return (
@@ -37,6 +39,22 @@ const FarmerRoutes = () => {
         element={
           <ProtectedRoute allowedUserType="farmer">
             <CropPrediction />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/farmer/yield-prediction"
+        element={
+          <ProtectedRoute allowedUserType="farmer">
+            <YieldPrediction />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/farmer/labour-recommendation"
+        element={
+          <ProtectedRoute allowedUserType="farmer">
+            <LabourRecommendation />
           </ProtectedRoute>
         }
       />

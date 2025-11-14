@@ -2,6 +2,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 40px 20px;
+  padding-top: 100px;
 }
 
 .dashboard-header {
@@ -182,6 +183,15 @@
   color: #2e7d32;
 }
 
+.job-detail.assigned-labour {
+  grid-column: 1 / -1;
+  background-color: #e8f5e9;
+  padding: 10px;
+  border-radius: 5px;
+  border-left: 4px solid #4caf50;
+  font-weight: 600;
+}
+
 .job-actions {
   display: flex;
   gap: 10px;
@@ -261,6 +271,89 @@
   border-radius: 5px;
 }
 
+/* Applications List Styles */
+.applications-list {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border: 2px solid #e8f5e9;
+}
+
+.applications-list h4 {
+  color: #2e7d32;
+  margin: 0 0 15px 0;
+  font-size: 1.1rem;
+}
+
+.applicant-card {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s;
+}
+
+.applicant-card:hover {
+  transform: translateX(5px);
+}
+
+.applicant-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.applicant-info strong {
+  color: #2e7d32;
+  font-size: 1rem;
+}
+
+.applicant-info span {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.applicant-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-accept,
+.btn-reject {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.btn-accept {
+  background-color: #4caf50;
+  color: white;
+}
+
+.btn-accept:hover {
+  opacity: 0.9;
+  transform: scale(1.05);
+}
+
+.btn-reject {
+  background-color: #ff9800;
+  color: white;
+}
+
+.btn-reject:hover {
+  opacity: 0.9;
+  transform: scale(1.05);
+}
+
 @media (max-width: 768px) {
   .dashboard-header h1 {
     font-size: 2rem;
@@ -272,5 +365,20 @@
 
   .actions-grid {
     grid-template-columns: 1fr;
+  }
+
+  .applicant-card {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  .applicant-actions {
+    width: 100%;
+  }
+
+  .btn-accept,
+  .btn-reject {
+    flex: 1;
   }
 }

@@ -17,13 +17,22 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     // Check if user is logged in
-    const storedUser = localStorage.getItem('user');
-    const storedUserType = localStorage.getItem('userType');
-    if (storedUser && storedUserType) {
-      setUser(JSON.parse(storedUser));
-      setUserType(storedUserType);
+    try {
+      const storedUser = localStorage.getItem('user');
+      const storedUserType = localStorage.getItem('userType');
+      if (storedUser && storedUserType) {
+        setUser(JSON.parse(storedUser));
+        setUserType(storedUserType);
+      }
+    } catch (error) {
+      console.error('Error loading user data:', error);
+      // Clear corrupted data
+      localStorage.removeItem('user');
+      localStorage.removeItem('userType');
+      localStorage.removeItem('token');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
   const login = (userData, type) => {

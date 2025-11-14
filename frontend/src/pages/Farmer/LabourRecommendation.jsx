@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { jobAPI } from '../../services/api';
+import Navbar from '../../components/Common/Navbar';
 import './LabourRecommendation.css';
 
 const LabourRecommendation = () => {
@@ -104,11 +105,13 @@ const LabourRecommendation = () => {
   };
 
   return (
-    <div className="labour-recommendation-container">
-      <div className="recommendation-header">
-        <h1>🤖 Smart Labour Recommendation System</h1>
-        <p>AI-powered matching to find the perfect labourers for your farm work</p>
-      </div>
+    <>
+      <Navbar />
+      <div className="labour-recommendation-container">
+        <div className="recommendation-header">
+          <h1>🤖 Smart Labour Recommendation System</h1>
+          <p>AI-powered matching to find the perfect labourers for your farm work</p>
+        </div>
 
       <div className="recommendation-form-card">
         <h2>Enter Your Requirements</h2>
@@ -279,7 +282,8 @@ const LabourRecommendation = () => {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 };
 

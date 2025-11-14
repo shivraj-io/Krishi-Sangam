@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { jobAPI } from '../../services/api';
+import Navbar from '../../components/Common/Navbar';
 import './MyApplications.css';
 
 const MyApplications = () => {
@@ -49,11 +50,13 @@ const MyApplications = () => {
   };
 
   return (
-    <div className="my-applications-container">
-      <div className="applications-header">
-        <h1>My Job Applications</h1>
-        <p>Track the status of your job applications</p>
-      </div>
+    <>
+      <Navbar />
+      <div className="my-applications-container">
+        <div className="applications-header">
+          <h1>My Job Applications</h1>
+          <p>Track the status of your job applications</p>
+        </div>
 
       <div className="application-stats">
         <div className="stat-box" onClick={() => setFilter('all')}>
@@ -138,7 +141,11 @@ const MyApplications = () => {
                 <div className="detail-row">
                   <div className="detail-item">
                     <span className="detail-icon">📍</span>
-                    <span><strong>Location:</strong> {application.job?.location}</span>
+                    <span><strong>Location:</strong> {
+                      typeof application.job?.location === 'object' 
+                        ? `${application.job.location.village}, ${application.job.location.district}`
+                        : application.job?.location
+                    }</span>
                   </div>
                   <div className="detail-item">
                     <span className="detail-icon">💰</span>
@@ -174,7 +181,8 @@ const MyApplications = () => {
           ))}
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 };
 

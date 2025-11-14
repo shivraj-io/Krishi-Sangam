@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Navbar from '../../components/Common/Navbar';
 import './GovSchemes.css';
 
 const GovSchemes = () => {
@@ -117,11 +118,13 @@ const GovSchemes = () => {
   });
 
   return (
-    <div className="gov-schemes-container">
-      <div className="schemes-header">
-        <h1>🏛️ Government Schemes for Farmers</h1>
-        <p>Explore various government schemes and subsidies available for farmers</p>
-      </div>
+    <>
+      <Navbar />
+      <div className="gov-schemes-container">
+        <div className="schemes-header">
+          <h1>🏛️ Government Schemes for Farmers</h1>
+          <p>Explore various government schemes and subsidies available for farmers</p>
+        </div>
 
       <div className="schemes-filters">
         <h3>Filter by Category</h3>
@@ -207,7 +210,8 @@ const GovSchemes = () => {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

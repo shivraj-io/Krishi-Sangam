@@ -31,6 +31,9 @@ const userSchema = new mongoose.Schema({
     district: String,
     state: String
   },
+  address: String, // Full address for farmer/labour
+  farmSize: Number, // Farm size in acres (for farmers)
+  crops: String, // Crops grown by farmer
   skills: [String], // sirf labour ke liye useful
   createdAt: {
     type: Date,

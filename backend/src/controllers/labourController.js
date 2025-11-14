@@ -117,3 +117,18 @@ module.exports = {
   completeJob,
   applyJob
 };
+
+// Predict labour needs (mock implementation)
+const predictLabour = async (req, res) => {
+  try {
+    const { cropType, area } = req.body || {};
+    // simple mock: labourNeeded = area * 2 for demo
+    const labourNeeded = (area && Number(area)) ? Math.ceil(area * 2) : 0;
+    return res.json({ cropType: cropType || 'unknown', area: area || 0, labourNeeded });
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+};
+
+// Export predictLabour as well
+module.exports.predictLabour = predictLabour;

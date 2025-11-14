@@ -1,8 +1,10 @@
 .navbar {
   background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 50%, #4caf50 100%);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 1000;
   backdrop-filter: blur(10px);
 }

@@ -1,3 +1,4 @@
+require("dotenv").config();
 const User = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 
@@ -73,14 +74,19 @@ const registerUser = async (req, res) => {
       phone,
       password,
       role,
-      skills
+      skills,
+      address: req.body.address,
+      farmSize: req.body.farmSize,
+      crops: req.body.crops
     });
 
     res.status(201).json({
-      _id: user._id,
-      name: user.fullName.firstName,
-      email: user.email,
-      role: user.role,
+      user: {
+        _id: user._id,
+        name: user.fullName.firstName,
+        email: user.email,
+        role: user.role
+      },
       token: generateToken(user._id, user.role)
     });
   } catch (error) {
@@ -105,9 +111,12 @@ const loginUser = async (req, res) => {
     if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
 
     res.json({
-      _id: user._id,
-      name: user.fullName.firstName,
-      role: user.role,
+      user: {
+        _id: user._id,
+        name: user.fullName.firstName,
+        email: user.email,
+        role: user.role
+      },
       token: generateToken(user._id, user.role)
     });
   } catch (error) {

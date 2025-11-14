@@ -9,9 +9,27 @@ const jobSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  type: {
+    type: String,
+    default: "General"
+  },
+  cropType: {
+    type: String
+  },
+  duration: {
+    type: String,
+    default: "1 day"
+  },
+  workersNeeded: {
+    type: Number,
+    default: 1
+  },
   wage: {
     type: Number,
     required: true
+  },
+  requirements: {
+    type: String
   },
   location: {
     village: String,
@@ -29,13 +47,27 @@ const jobSchema = new mongoose.Schema({
   },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",  // job farmer ne banaya hoga
+    ref: "User",
     required: true
   },
   assignedTo: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User"   // job kisi labour ko assign hoga
+    ref: "User"
   },
+  labourRequests: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
+  }],
+  applications: [{
+    labour: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+    },
+    appliedAt: {
+      type: Date,
+      default: Date.now
+    }
+  }],
   createdAt: {
     type: Date,
     default: Date.now

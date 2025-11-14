@@ -41,3 +41,22 @@ export const SEASONS = [
   'Rabi',
   'Zaid',
 ];
+
+// Helper function to format location object to string
+export const formatLocation = (location) => {
+  if (!location) return 'N/A';
+  
+  if (typeof location === 'string') {
+    return location;
+  }
+  
+  if (typeof location === 'object') {
+    const parts = [];
+    if (location.village) parts.push(location.village);
+    if (location.district) parts.push(location.district);
+    if (location.state) parts.push(location.state);
+    return parts.join(', ') || 'N/A';
+  }
+  
+  return 'N/A';
+};

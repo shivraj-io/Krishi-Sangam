@@ -35,6 +35,8 @@ export const jobAPI = {
   updateJob: (id, data) => api.put(`/jobs/${id}`, data),
   deleteJob: (id) => api.delete(`/jobs/${id}`),
   applyForJob: (jobId) => api.post(`/jobs/${jobId}/apply`),
+  acceptApplication: (jobId, labourId) => api.post(`/jobs/${jobId}/accept/${labourId}`),
+  rejectApplication: (jobId, labourId) => api.post(`/jobs/${jobId}/reject/${labourId}`),
   getMyJobs: () => api.get('/jobs/my-jobs'),
   getMyApplications: () => api.get('/jobs/my-applications'),
 };
@@ -66,6 +68,16 @@ export const weatherAPI = {
 // Crop Prediction API
 export const cropAPI = {
   predictCrop: (data) => api.post('/crop/predict', data),
+};
+
+// Yield Prediction API
+export const yieldAPI = {
+  predictYield: (data) => api.post('/yield/predict', data),
+};
+
+// Labour Prediction API
+export const labourAPI = {
+  predictLabour: (data) => api.post('/labour/predict-labour', data),
 };
 
 export default api;

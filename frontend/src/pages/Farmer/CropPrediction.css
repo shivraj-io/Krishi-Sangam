@@ -2,6 +2,7 @@
   max-width: 1400px;
   margin: 0 auto;
   padding: 40px 20px;
+  padding-top: 100px;
 }
 
 .prediction-header {
@@ -156,6 +157,32 @@
   border-radius: 10px;
   border-left: 4px solid #4caf50;
   position: relative;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.crop-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+}
+
+.crop-card.top-pick {
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  border-left: 4px solid #ff9800;
+  box-shadow: 0 6px 20px rgba(255, 152, 0, 0.3);
+}
+
+.crop-card.top-pick .crop-rank {
+  background-color: #ff9800;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
 }
 
 .crop-rank {

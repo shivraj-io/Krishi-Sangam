@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jobAPI } from '../../services/api';
 import { CROP_TYPES } from '../../utils/constants';
+import Navbar from '../../components/Common/Navbar';
 import './CreateJob.css';
 
 const CreateJob = () => {
@@ -45,12 +46,14 @@ const CreateJob = () => {
   };
 
   return (
-    <div className="create-job-container">
-      <div className="create-job-card">
-        <h1>Create New Job Post</h1>
-        <p className="subtitle">Fill in the details to post a new job</p>
+    <>
+      <Navbar />
+      <div className="create-job-container">
+        <div className="create-job-card">
+          <h1>Create New Job Post</h1>
+          <p className="subtitle">Fill in the details to post a new job</p>
 
-        {error && <div className="error-message">{error}</div>}
+          {error && <div className="error-message">{error}</div>}
 
         <form onSubmit={handleSubmit} className="job-form">
           <div className="form-row">
@@ -210,7 +213,8 @@ const CreateJob = () => {
           </div>
         </form>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

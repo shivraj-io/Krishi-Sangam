@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { weatherAPI } from '../../services/api';
+import Navbar from '../../components/Common/Navbar';
 import './Weather.css';
 
 const Weather = () => {
@@ -73,11 +74,13 @@ const Weather = () => {
   };
 
   return (
-    <div className="weather-container">
-      <div className="weather-header">
-        <h1>🌤️ Weather Forecast</h1>
-        <p>Check today's weather conditions for better farm planning</p>
-      </div>
+    <>
+      <Navbar />
+      <div className="weather-container">
+        <div className="weather-header">
+          <h1>🌤️ Weather Forecast</h1>
+          <p>Check today's weather conditions for better farm planning</p>
+        </div>
 
       <div className="weather-search">
         <form onSubmit={handleSearchWeather}>
@@ -190,7 +193,8 @@ const Weather = () => {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 };
 
