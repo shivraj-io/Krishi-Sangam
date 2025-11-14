@@ -115,6 +115,27 @@
   cursor: not-allowed;
 }
 
+.error-message {
+  background: #ffebee;
+  border: 2px solid #f44336;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.error-icon {
+  font-size: 2rem;
+}
+
+.error-message p {
+  color: #c62828;
+  margin: 0;
+  font-size: 1rem;
+}
+
 .recommendations-section {
   margin-top: 40px;
 }
@@ -309,6 +330,147 @@
 .btn-contact:hover {
   opacity: 0.9;
   transform: translateY(-2px);
+}
+
+/* Preview Section */
+.preview-section {
+  margin: 40px 0;
+  padding: 30px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 15px;
+}
+
+.preview-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.preview-header h2 {
+  color: #2e7d32;
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+.preview-header p {
+  color: #666;
+  font-size: 1rem;
+}
+
+.preview-card {
+  opacity: 0.95;
+  transition: all 0.3s ease;
+}
+
+.preview-card:hover {
+  opacity: 1;
+  transform: translateY(-5px);
+}
+
+/* ML Section */
+.ml-section {
+  background: #f0f8ff;
+  padding: 20px;
+  border-radius: 8px;
+  border: 2px dashed #2e7d32;
+  margin: 20px 0;
+}
+
+.ml-section h3 {
+  color: #2e7d32;
+  margin-bottom: 5px;
+  font-size: 1.2rem;
+}
+
+.ml-section p {
+  color: #666;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+}
+
+/* ML Prediction Card */
+.ml-prediction-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 30px;
+  border-radius: 15px;
+  margin: 30px 0;
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+}
+
+.ml-prediction-card h2 {
+  color: white;
+  margin-bottom: 25px;
+  font-size: 1.8rem;
+  text-align: center;
+}
+
+.prediction-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.stat-box {
+  background-color: rgba(130, 73, 73, 0.2);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  transition: transform 0.3s ease;
+}
+
+.stat-box:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.25);
+}
+
+
+
+.stat-icon {
+  font-size: 2.5rem;
+}
+
+.stat-box h3 {
+  color: rgb(106, 51, 151);
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.stat-box p {
+  color: rgb(106, 51, 151);
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.ml-recommendations {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.ml-recommendations h4 {
+  color: white;
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+.ml-recommendations ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ml-recommendations li {
+  padding: 10px;
+  margin: 8px 0;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  border-left: 4px solid #ffd700;
+  font-size: 0.95rem;
 }
 
 @media (max-width: 768px) {

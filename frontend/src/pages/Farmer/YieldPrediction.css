@@ -223,6 +223,44 @@
   font-size: 0.9rem;
 }
 
+.input-summary {
+  background-color: #f5f5f5;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.input-summary h3 {
+  color: #2e7d32;
+  margin-bottom: 15px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background: white;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.summary-item .label {
+  font-weight: 600;
+  color: #666;
+}
+
+.summary-item .value {
+  color: #2e7d32;
+  font-weight: 600;
+}
+
 .recommendations {
   background-color: #e3f2fd;
   padding: 20px;

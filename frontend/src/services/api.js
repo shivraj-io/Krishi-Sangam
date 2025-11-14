@@ -78,6 +78,7 @@ export const yieldAPI = {
 // Labour Prediction API
 export const labourAPI = {
   predictLabour: (data) => api.post('/labour/predict-labour', data),
+  recommendLabour: (data) => api.post('/labour/recommend', data),
 };
 
 export default api;

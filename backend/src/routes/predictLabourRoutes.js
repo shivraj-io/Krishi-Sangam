@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const {predictLabour} = require('../controllers/labourController');
+const { recommendLabour } = require('../controllers/labourController');
+const { protect } = require('../middlewares/authMiddleware');
 
-// Route to handle labour yield prediction requests
-router.post('/predict-labour', predictLabour);
+// Route to get smart labour recommendations (protected route for farmers)
+router.post('/recommend', protect, recommendLabour);
+
 module.exports = router;

@@ -3,7 +3,7 @@ const path = require("path");
 
 exports.predictYield = async (req, res) => {
   try {
-    const { State, Year, Season, Crop, Area, Rainfall } = req.body;
+    const { State, Year, Season, Crop, Area, Rainfall, Temperature, Fertilizer, Pesticide } = req.body;
 
     // Validate required fields
     if ([State, Year, Season, Crop, Area, Rainfall].some(v => v === undefined || v === null)) {
@@ -12,8 +12,18 @@ exports.predictYield = async (req, res) => {
       });
     }
 
-    // Prepare input data for Python script
-    const inputData = JSON.stringify({ State, Year, Season, Crop, Area, Rainfall });
+    // Prepare input data for Python script with all parameters
+    const inputData = JSON.stringify({ 
+      State, 
+      Year, 
+      Season, 
+      Crop, 
+      Area, 
+      Rainfall,
+      Temperature: Temperature || 25,
+      Fertilizer: Fertilizer || 150,
+      Pesticide: Pesticide || 3
+    });
     
     // Path to Python script
     const scriptPath = path.join(__dirname, "../ml/predict_yield.py");
@@ -50,7 +60,17 @@ exports.predictYield = async (req, res) => {
       try {
         const prediction = JSON.parse(result.trim());
         res.json({
-          input: { State, Year, Season, Crop, Area, Rainfall },
+          input: { 
+            State, 
+            Year, 
+            Season, 
+            Crop, 
+            Area, 
+            Rainfall,
+            Temperature: Temperature || 25,
+            Fertilizer: Fertilizer || 150,
+            Pesticide: Pesticide || 3
+          },
           ...prediction
         });
       } catch (parseError) {

@@ -1,21 +1,43 @@
-import { useState, useEffect } from 'react';
-import { jobAPI } from '../../services/api';
+import { useState } from 'react';
+import { labourAPI } from '../../services/api';
 import Navbar from '../../components/Common/Navbar';
 import './LabourRecommendation.css';
 
 const LabourRecommendation = () => {
   const [requirements, setRequirements] = useState({
+    // Basic requirements
     jobType: '',
     skills: '',
     experience: '',
     location: '',
-    duration: '',
-    workersNeeded: 1,
+    
+    // Advanced ML Parameters (from train_labour_model_v2.py)
+    Crop: '',
+    Season: 'Kharif',
+    Region: 'Punjab',
+    Soil_Type: 'Loamy',
+    Irrigation_Type: 'Canal',
+    Mechanization_Level: 'Medium',
+    Labour_Availability: 'High',
+    Gender_Split: 'Mixed',
+    Farm_Size_Acre: '',
+    Prev_Yield_q_per_acre: '',
+    Weather_Index: 0.8
   });
   const [recommendations, setRecommendations] = useState([]);
+  const [mlPrediction, setMlPrediction] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const jobTypes = ['Plowing', 'Sowing', 'Harvesting', 'Irrigation', 'Weeding', 'General Labor', 'Pesticide Application', 'Others'];
+  const cropTypes = ['Rice', 'Wheat', 'Cotton', 'Sugarcane', 'Maize', 'Soybean', 'Vegetables', 'Fruits'];
+  const seasons = ['Kharif', 'Rabi', 'Zaid'];
+  const regions = ['Punjab', 'Haryana', 'Uttar Pradesh', 'Gujarat', 'Maharashtra', 'Rajasthan', 'Madhya Pradesh', 'Karnataka', 'Andhra Pradesh', 'Tamil Nadu'];
+  const soilTypes = ['Loamy', 'Clay', 'Sandy', 'Black', 'Red', 'Alluvial'];
+  const irrigationTypes = ['Canal', 'Well', 'Tube Well', 'Drip', 'Sprinkler', 'Rain-fed'];
+  const mechanizationLevels = ['High', 'Medium', 'Low', 'Unknown'];
+  const labourAvailability = ['High', 'Medium', 'Low'];
+  const genderSplit = ['Male', 'Female', 'Mixed'];
 
   const handleChange = (e) => {
     setRequirements({
@@ -27,63 +49,28 @@ const LabourRecommendation = () => {
   const handleSearch = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
 
-    // Simulate AI recommendation
-    setTimeout(() => {
-      const mockLabourers = [
-        {
-          id: 1,
-          name: 'Ramesh Kumar',
-          skills: ['Harvesting', 'Irrigation', 'Plowing'],
-          experience: 8,
-          rating: 4.8,
-          location: 'Punjab',
-          availability: 'Available',
-          matchScore: 95,
-          completedJobs: 145,
-          phoneVerified: true,
-        },
-        {
-          id: 2,
-          name: 'Suresh Singh',
-          skills: ['Sowing', 'Weeding', 'General Labor'],
-          experience: 5,
-          rating: 4.5,
-          location: 'Haryana',
-          availability: 'Available',
-          matchScore: 88,
-          completedJobs: 89,
-          phoneVerified: true,
-        },
-        {
-          id: 3,
-          name: 'Mahesh Yadav',
-          skills: ['Plowing', 'Harvesting'],
-          experience: 10,
-          rating: 4.9,
-          location: 'Uttar Pradesh',
-          availability: 'Busy',
-          matchScore: 82,
-          completedJobs: 210,
-          phoneVerified: true,
-        },
-        {
-          id: 4,
-          name: 'Rajesh Patel',
-          skills: ['Irrigation', 'Pesticide Application'],
-          experience: 6,
-          rating: 4.6,
-          location: 'Gujarat',
-          availability: 'Available',
-          matchScore: 78,
-          completedJobs: 95,
-          phoneVerified: true,
-        },
-      ];
-
-      setRecommendations(mockLabourers);
+    try {
+      const response = await labourAPI.recommendLabour(requirements);
+      console.log('API Response:', response.data);
+      
+      if (response.data.success) {
+        setRecommendations(response.data.recommendations);
+        setMlPrediction(response.data.mlPrediction || null);
+        
+        if (response.data.recommendations.length === 0) {
+          setError('No labour found matching your requirements. Try adjusting your filters.');
+        }
+      } else {
+        setError(response.data.message || 'Failed to get recommendations');
+      }
+    } catch (err) {
+      console.error('Labour Recommendation Error:', err);
+      setError(err.response?.data?.message || 'Failed to fetch recommendations. Please try again.');
+    } finally {
       setLoading(false);
-    }, 1500);
+    }
   };
 
   const handleReset = () => {
@@ -92,10 +79,21 @@ const LabourRecommendation = () => {
       skills: '',
       experience: '',
       location: '',
-      duration: '',
-      workersNeeded: 1,
+      Crop: '',
+      Season: 'Kharif',
+      Region: 'Punjab',
+      Soil_Type: 'Loamy',
+      Irrigation_Type: 'Canal',
+      Mechanization_Level: 'Medium',
+      Labour_Availability: 'High',
+      Gender_Split: 'Mixed',
+      Farm_Size_Acre: '',
+      Prev_Yield_q_per_acre: '',
+      Weather_Index: 0.8
     });
     setRecommendations([]);
+    setMlPrediction(null);
+    setError(null);
   };
 
   const getMatchColor = (score) => {
@@ -113,80 +111,203 @@ const LabourRecommendation = () => {
           <p>AI-powered matching to find the perfect labourers for your farm work</p>
         </div>
 
-      <div className="recommendation-form-card">
-        <h2>Enter Your Requirements</h2>
-        <form onSubmit={handleSearch} className="recommendation-form">
-          <div className="form-row">
-            <div className="form-group">
-              <label>Job Type *</label>
-              <select name="jobType" value={requirements.jobType} onChange={handleChange} required>
-                <option value="">Select job type</option>
-                {jobTypes.map(type => (
-                  <option key={type} value={type}>{type}</option>
-                ))}
-              </select>
+        <div className="recommendation-form-card">
+          <h2>🌾 Advanced ML Labour Prediction</h2>
+          <p style={{marginBottom: '20px', color: '#666'}}>Enter complete farm details for accurate AI-powered labour recommendations</p>
+          <form onSubmit={handleSearch} className="recommendation-form">
+          
+          {/* Crop & Farm Details */}
+          <div className="ml-section">
+            <h3>🌱 Crop & Farm Information</h3>
+            <div className="form-row">
+              <div className="form-group">
+                <label>Crop Type *</label>
+                <select name="Crop" value={requirements.Crop} onChange={handleChange} required>
+                  <option value="">Select crop</option>
+                  {cropTypes.map(crop => (
+                    <option key={crop} value={crop}>{crop}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>Season *</label>
+                <select name="Season" value={requirements.Season} onChange={handleChange} required>
+                  {seasons.map(season => (
+                    <option key={season} value={season}>{season}</option>
+                  ))}
+                </select>
+              </div>
             </div>
 
-            <div className="form-group">
-              <label>Required Skills</label>
-              <input
-                type="text"
-                name="skills"
-                value={requirements.skills}
-                onChange={handleChange}
-                placeholder="e.g., Plowing, Harvesting"
-              />
+            <div className="form-row">
+              <div className="form-group">
+                <label>Farm Size (Acres) *</label>
+                <input
+                  type="number"
+                  name="Farm_Size_Acre"
+                  value={requirements.Farm_Size_Acre}
+                  onChange={handleChange}
+                  min="0.1"
+                  step="0.1"
+                  placeholder="e.g., 30"
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Region</label>
+                <select name="Region" value={requirements.Region} onChange={handleChange}>
+                  {regions.map(region => (
+                    <option key={region} value={region}>{region}</option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
 
-          <div className="form-row">
-            <div className="form-group">
-              <label>Minimum Experience (years)</label>
-              <input
-                type="number"
-                name="experience"
-                value={requirements.experience}
-                onChange={handleChange}
-                min="0"
-                placeholder="e.g., 3"
-              />
-            </div>
+          {/* Soil & Irrigation */}
+          <div className="ml-section">
+            <h3>🌍 Soil & Irrigation Details</h3>
+            <div className="form-row">
+              <div className="form-group">
+                <label>Soil Type</label>
+                <select name="Soil_Type" value={requirements.Soil_Type} onChange={handleChange}>
+                  {soilTypes.map(soil => (
+                    <option key={soil} value={soil}>{soil}</option>
+                  ))}
+                </select>
+              </div>
 
-            <div className="form-group">
-              <label>Location</label>
-              <input
-                type="text"
-                name="location"
-                value={requirements.location}
-                onChange={handleChange}
-                placeholder="e.g., Punjab"
-              />
+              <div className="form-group">
+                <label>Irrigation Type</label>
+                <select name="Irrigation_Type" value={requirements.Irrigation_Type} onChange={handleChange}>
+                  {irrigationTypes.map(irrigation => (
+                    <option key={irrigation} value={irrigation}>{irrigation}</option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
 
-          <div className="form-row">
-            <div className="form-group">
-              <label>Duration (days)</label>
-              <input
-                type="number"
-                name="duration"
-                value={requirements.duration}
-                onChange={handleChange}
-                min="1"
-                placeholder="e.g., 7"
-              />
+          {/* Labour & Mechanization */}
+          <div className="ml-section">
+            <h3>👥 Labour & Mechanization</h3>
+            <div className="form-row">
+              <div className="form-group">
+                <label>Mechanization Level</label>
+                <select name="Mechanization_Level" value={requirements.Mechanization_Level} onChange={handleChange}>
+                  {mechanizationLevels.map(level => (
+                    <option key={level} value={level}>{level}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>Labour Availability</label>
+                <select name="Labour_Availability" value={requirements.Labour_Availability} onChange={handleChange}>
+                  {labourAvailability.map(avail => (
+                    <option key={avail} value={avail}>{avail}</option>
+                  ))}
+                </select>
+              </div>
             </div>
 
-            <div className="form-group">
-              <label>Workers Needed</label>
-              <input
-                type="number"
-                name="workersNeeded"
-                value={requirements.workersNeeded}
-                onChange={handleChange}
-                min="1"
-                required
-              />
+            <div className="form-row">
+              <div className="form-group">
+                <label>Gender Split</label>
+                <select name="Gender_Split" value={requirements.Gender_Split} onChange={handleChange}>
+                  {genderSplit.map(gender => (
+                    <option key={gender} value={gender}>{gender}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group"></div>
+            </div>
+          </div>
+
+          {/* Yield & Weather */}
+          <div className="ml-section">
+            <h3>📊 Yield & Weather Data</h3>
+            <div className="form-row">
+              <div className="form-group">
+                <label>Previous Yield (quintals/acre)</label>
+                <input
+                  type="number"
+                  name="Prev_Yield_q_per_acre"
+                  value={requirements.Prev_Yield_q_per_acre}
+                  onChange={handleChange}
+                  min="0"
+                  step="0.1"
+                  placeholder="e.g., 20"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Weather Index (0-1)</label>
+                <input
+                  type="number"
+                  name="Weather_Index"
+                  value={requirements.Weather_Index}
+                  onChange={handleChange}
+                  min="0"
+                  max="1"
+                  step="0.1"
+                  placeholder="e.g., 0.8"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Labour Matching Filters */}
+          <div className="ml-section" style={{borderColor: '#2196f3'}}>
+            <h3>🔍 Labour Matching Filters (Optional)</h3>
+            <div className="form-row">
+              <div className="form-group">
+                <label>Job Type</label>
+                <select name="jobType" value={requirements.jobType} onChange={handleChange}>
+                  <option value="">Any</option>
+                  {jobTypes.map(type => (
+                    <option key={type} value={type}>{type}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>Required Skills</label>
+                <input
+                  type="text"
+                  name="skills"
+                  value={requirements.skills}
+                  onChange={handleChange}
+                  placeholder="e.g., Plowing, Harvesting"
+                />
+              </div>
+            </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label>Minimum Experience (years)</label>
+                <input
+                  type="number"
+                  name="experience"
+                  value={requirements.experience}
+                  onChange={handleChange}
+                  min="0"
+                  placeholder="e.g., 3"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Location Preference</label>
+                <input
+                  type="text"
+                  name="location"
+                  value={requirements.location}
+                  onChange={handleChange}
+                  placeholder="e.g., Punjab"
+                />
+              </div>
             </div>
           </div>
 
@@ -201,6 +322,58 @@ const LabourRecommendation = () => {
         </form>
       </div>
 
+      {error && (
+        <div className="error-message">
+          <span className="error-icon">⚠️</span>
+          <p>{error}</p>
+        </div>
+      )}
+
+      {mlPrediction && (
+        <div className="ml-prediction-card">
+          <h2>🤖 AI Labour Requirement Prediction</h2>
+          <div className="prediction-stats">
+            <div className="stat-box primary">
+              <span className="stat-icon">👥</span>
+              <div>
+                <h3>{mlPrediction.recommendedLabourCount}</h3>
+                <p>Workers Required</p>
+              </div>
+            </div>
+            <div className="stat-box">
+              <span className="stat-icon">📊</span>
+              <div>
+                <h3>{mlPrediction.demandLevel}</h3>
+                <p>Demand Level</p>
+              </div>
+            </div>
+            <div className="stat-box">
+              <span className="stat-icon">📏</span>
+              <div>
+                <h3>{mlPrediction.labourPerAcre || mlPrediction.labourPerHectare || 'N/A'}</h3>
+                <p>Workers per Acre</p>
+              </div>
+            </div>
+            <div className="stat-box">
+              <span className="stat-icon">✨</span>
+              <div>
+                <h3>{Math.round((mlPrediction.confidence || 0.9) * 100)}%</h3>
+                <p>Confidence</p>
+              </div>
+            </div>
+          </div>
+          
+          <div style={{marginTop: '15px', padding: '10px', background: '#f5f5f5', borderRadius: '5px'}}>
+            <p style={{margin: 0, fontSize: '0.9rem', color: '#666'}}>
+              <strong>Method:</strong> {mlPrediction.method || 'ML Model'} | 
+              <strong> Crop:</strong> {requirements.Crop} | 
+              <strong> Season:</strong> {requirements.Season} | 
+              <strong> Farm Size:</strong> {requirements.Farm_Size_Acre} acres
+            </p>
+          </div>
+        </div>
+      )}
+
       {recommendations.length > 0 && (
         <div className="recommendations-section">
           <div className="section-header">
@@ -209,24 +382,39 @@ const LabourRecommendation = () => {
           </div>
 
           <div className="recommendations-grid">
-            {recommendations.map((labour) => (
-              <div key={labour.id} className="labour-card">
+            {recommendations.map((labour, index) => {
+              // Safe data extraction
+              const labourId = labour.id || labour._id || index;
+              const displayName = String(labour.name || labour.fullName || 'Labour');
+              const firstLetter = displayName.charAt(0).toUpperCase();
+              const rating = Number(labour.rating) || 4.0;
+              const completedJobs = Number(labour.completedJobs) || 0;
+              const matchScore = Number(labour.matchScore) || 0;
+              const experience = Number(labour.experience) || 0;
+              const skills = Array.isArray(labour.skills) ? labour.skills : [];
+              const location = String(labour.location || 'Not specified');
+              const phone = String(labour.phone || 'N/A');
+              const availability = String(labour.availability || 'Available');
+              const phoneVerified = Boolean(labour.phoneVerified);
+              
+              return (
+              <div key={labourId} className="labour-card">
                 <div className="labour-header">
                   <div className="labour-avatar">
-                    <span>{labour.name.charAt(0)}</span>
+                    <span>{firstLetter}</span>
                   </div>
                   <div className="labour-info">
-                    <h3>{labour.name}</h3>
+                    <h3>{displayName}</h3>
                     <div className="labour-rating">
-                      <span className="stars">⭐ {labour.rating}</span>
-                      <span className="reviews">({labour.completedJobs} jobs)</span>
+                      <span className="stars">⭐ {rating}</span>
+                      <span className="reviews">({completedJobs} jobs)</span>
                     </div>
                   </div>
                   <div 
                     className="match-badge" 
-                    style={{ backgroundColor: getMatchColor(labour.matchScore) }}
+                    style={{ backgroundColor: getMatchColor(matchScore) }}
                   >
-                    {labour.matchScore}% Match
+                    {matchScore}% Match
                   </div>
                 </div>
 
@@ -236,7 +424,7 @@ const LabourRecommendation = () => {
                     <div>
                       <strong>Skills:</strong>
                       <div className="skills-tags">
-                        {labour.skills.map((skill, idx) => (
+                        {skills.map((skill, idx) => (
                           <span key={idx} className="skill-tag">{skill}</span>
                         ))}
                       </div>
@@ -245,30 +433,30 @@ const LabourRecommendation = () => {
 
                   <div className="detail-item">
                     <span className="detail-icon">💼</span>
-                    <span><strong>Experience:</strong> {labour.experience} years</span>
+                    <span><strong>Experience:</strong> {experience} years</span>
                   </div>
 
                   <div className="detail-item">
                     <span className="detail-icon">📍</span>
-                    <span><strong>Location:</strong> {labour.location}</span>
+                    <span><strong>Location:</strong> {location}</span>
                   </div>
 
                   <div className="detail-item">
                     <span className="detail-icon">✅</span>
-                    <span><strong>Completed Jobs:</strong> {labour.completedJobs}</span>
+                    <span><strong>Completed Jobs:</strong> {completedJobs}</span>
                   </div>
 
                   <div className="detail-item">
                     <span className="detail-icon">📱</span>
                     <span>
-                      <strong>Phone:</strong> 
-                      {labour.phoneVerified && <span className="verified"> Verified ✓</span>}
+                      <strong>Phone:</strong> {phone}
+                      {phoneVerified && <span className="verified"> Verified ✓</span>}
                     </span>
                   </div>
 
                   <div className="availability-status">
-                    <span className={`status-badge ${labour.availability.toLowerCase()}`}>
-                      {labour.availability}
+                    <span className={`status-badge ${availability.toLowerCase()}`}>
+                      {availability}
                     </span>
                   </div>
                 </div>
@@ -278,7 +466,8 @@ const LabourRecommendation = () => {
                   <button className="btn-contact">Contact Now</button>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}
