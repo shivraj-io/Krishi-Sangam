@@ -1,7 +1,18 @@
 import { Link } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
 import './Home.css';
 
 const Home = () => {
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.play().catch(error => {
+        console.log("Video autoplay failed:", error);
+      });
+    }
+  }, []);
+
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -15,7 +26,7 @@ const Home = () => {
       <nav className="landing-nav">
         <div className="landing-nav-container">
           <div className="landing-logo">
-            <span className="landing-logo-icon">🌾</span>
+            <img src="/logo.png" alt="Krishi Sangam Logo" className="landing-logo-icon" />
             <span className="landing-logo-text">Krishi Sangam</span>
           </div>
           <ul className="landing-menu">
@@ -37,6 +48,19 @@ const Home = () => {
       </nav>
 
       <section id="home" className="hero">
+        <video 
+          ref={videoRef}
+          autoPlay 
+          loop 
+          muted 
+          playsInline 
+          className="hero-video"
+          preload="auto"
+        >
+          <source src="/video%203.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <div className="hero-overlay"></div>
         <div className="hero-content">
           <h1>Welcome to Krishi Sangam</h1>
           <p className="hero-subtitle">Jahaan Khet, Kaam aur Gyaan milte hain</p>
