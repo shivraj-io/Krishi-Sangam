@@ -46,7 +46,7 @@ const LabourDashboard = () => {
       <Navbar />
       <div className="labour-dashboard">
         <div className="dashboard-header">
-          <h1>Welcome, {user?.name}! 👷</h1>
+          <h1>Welcome, {user?.name}!</h1>
           <p>Find and apply for agricultural jobs</p>
         </div>
 

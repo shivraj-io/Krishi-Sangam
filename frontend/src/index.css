@@ -1,10 +1,10 @@
 :root {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.6;
   font-weight: 400;
 
-  color: #333;
-  background-color: #fafafa;
+  color: #fff;
+  background: linear-gradient(135deg, #0a2e0a 0%, #1a5e1a 50%, #2e7d32 100%);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -16,12 +16,33 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background: linear-gradient(135deg, #0a2e0a 0%, #1a5e1a 50%, #2e7d32 100%);
+  background-attachment: fixed;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(10, 46, 10, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #4caf50, #8bc34a);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #66bb6a, #a5d6a7);
 }
 
 h1, h2, h3, h4, h5, h6 {

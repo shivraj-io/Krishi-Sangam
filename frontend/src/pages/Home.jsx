@@ -6,10 +6,22 @@ const Home = () => {
   const videoRef = useRef(null);
 
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.play().catch(error => {
-        console.log("Video autoplay failed:", error);
-      });
+    const video = videoRef.current;
+    if (video) {
+      console.log('Video element found:', video);
+      video.load();
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            console.log('Video playing successfully');
+          })
+          .catch(error => {
+            console.error("Video autoplay failed:", error);
+          });
+      }
+    } else {
+      console.error('Video element not found');
     }
   }, []);
 
@@ -57,14 +69,13 @@ const Home = () => {
           className="hero-video"
           preload="auto"
         >
-          <source src="/video%203.mp4" type="video/mp4" />
+          <source src="/video.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
         <div className="hero-overlay"></div>
         <div className="hero-content">
           <h1>Welcome to Krishi Sangam</h1>
           <p className="hero-subtitle">Jahaan Khet, Kaam aur Gyaan milte hain</p>
-          <p className="hero-tagline">जहाँ खेत, काम और ज्ञान मिलते हैं</p>
           <p className="hero-description">
             A comprehensive platform connecting farmers with skilled agricultural workers,
             providing smart tools, weather updates, and government schemes for modern farming.
@@ -80,6 +91,7 @@ const Home = () => {
         <h2>Our Features</h2>
         <div className="features-grid">
           <div className="feature-card">
+            <span className="feature-badge">Essential</span>
             <div className="feature-icon">👨‍🌾</div>
             <h3>For Farmers</h3>
             <ul>
@@ -90,6 +102,7 @@ const Home = () => {
             </ul>
           </div>
           <div className="feature-card">
+            <span className="feature-badge">Essential</span>
             <div className="feature-icon">👷</div>
             <h3>For Labourers</h3>
             <ul>
@@ -100,6 +113,7 @@ const Home = () => {
             </ul>
           </div>
           <div className="feature-card">
+            <span className="feature-badge">Real-Time</span>
             <div className="feature-icon">🌤️</div>
             <h3>Today's Weather</h3>
             <ul>
@@ -110,6 +124,7 @@ const Home = () => {
             </ul>
           </div>
           <div className="feature-card">
+            <span className="feature-badge">AI Powered</span>
             <div className="feature-icon">🌾</div>
             <h3>Crop Prediction</h3>
             <ul>
@@ -120,6 +135,7 @@ const Home = () => {
             </ul>
           </div>
           <div className="feature-card">
+            <span className="feature-badge">Analytics</span>
             <div className="feature-icon">📊</div>
             <h3>Yield Prediction</h3>
             <ul>
@@ -130,6 +146,7 @@ const Home = () => {
             </ul>
           </div>
           <div className="feature-card">
+            <span className="feature-badge">AI Powered</span>
             <div className="feature-icon">🤖</div>
             <h3>Smart Labour Recommendation</h3>
             <ul>
@@ -139,16 +156,7 @@ const Home = () => {
               <li>Rating & reviews</li>
             </ul>
           </div>
-          <div className="feature-card">
-            <div className="feature-icon">🏛️</div>
-            <h3>Government Schemes</h3>
-            <ul>
-              <li>Latest schemes info</li>
-              <li>Eligibility checker</li>
-              <li>Application guidance</li>
-              <li>Subsidy calculator</li>
-            </ul>
-          </div>
+          
         </div>
       </section>
 

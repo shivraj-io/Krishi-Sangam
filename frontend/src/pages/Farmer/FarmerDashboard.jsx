@@ -69,7 +69,7 @@ const FarmerDashboard = () => {
       <Navbar />
       <div className="farmer-dashboard">
         <div className="dashboard-header">
-          <h1>Welcome, {user?.name}! 👨‍🌾</h1>
+          <h1>Welcome, {user?.name}! </h1>
           <p>Manage your farm jobs and explore tools</p>
         </div>
 
