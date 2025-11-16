@@ -95,7 +95,7 @@ const CropPrediction = () => {
                     value={formData.nitrogen}
                     onChange={handleChange}
                     required
-                    placeholder="0-140"
+                    placeholder="0-140 (e.g., 90)"
                     min="0"
                     max="140"
                   />
@@ -108,7 +108,7 @@ const CropPrediction = () => {
                     value={formData.phosphorus}
                     onChange={handleChange}
                     required
-                    placeholder="5-145"
+                    placeholder="5-145 (e.g., 42)"
                     min="0"
                     max="145"
                   />
@@ -121,7 +121,7 @@ const CropPrediction = () => {
                     value={formData.potassium}
                     onChange={handleChange}
                     required
-                    placeholder="5-205"
+                    placeholder="5-205 (e.g., 43)"
                     min="0"
                     max="205"
                   />
@@ -140,7 +140,7 @@ const CropPrediction = () => {
                     value={formData.temperature}
                     onChange={handleChange}
                     required
-                    placeholder="8-45"
+                    placeholder="8-45 (e.g., 25)"
                     step="0.1"
                   />
                 </div>
@@ -152,7 +152,7 @@ const CropPrediction = () => {
                     value={formData.humidity}
                     onChange={handleChange}
                     required
-                    placeholder="10-100"
+                    placeholder="10-100 (e.g., 80)"
                     min="0"
                     max="100"
                   />
@@ -168,7 +168,7 @@ const CropPrediction = () => {
                     value={formData.ph}
                     onChange={handleChange}
                     required
-                    placeholder="3.5-9.5"
+                    placeholder="3.5-9.5 (e.g., 6.5)"
                     step="0.1"
                     min="0"
                     max="14"
@@ -182,7 +182,7 @@ const CropPrediction = () => {
                     value={formData.rainfall}
                     onChange={handleChange}
                     required
-                    placeholder="20-300"
+                    placeholder="20-300 (e.g., 200)"
                     step="0.1"
                   />
                 </div>
