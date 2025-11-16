@@ -11,15 +11,15 @@ const Footer = () => {
         <div className="footer-section">
           <h4>Quick Links</h4>
           <ul>
-            <li><a href="/about">About Us</a></li>
-            <li><a href="/contact">Contact</a></li>
-            <li><a href="/privacy">Privacy Policy</a></li>
+            <li><a href="/">About Us</a></li>
+            <li><a href="/">Contact</a></li>
+            <li><a href="/">Privacy Policy</a></li>
           </ul>
         </div>
         <div className="footer-section">
           <h4>Contact</h4>
-          <p>📧 info@krishisangam.com</p>
-          <p>📱 +91 1234567890</p>
+          <p>📧 shivrajsinghpipawad@gmail.com</p>
+          <p>📱 +91 7974703801</p>
         </div>
       </div>
       <div className="footer-bottom">

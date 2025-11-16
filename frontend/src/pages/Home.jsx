@@ -78,7 +78,7 @@ const Home = () => {
           <p className="hero-subtitle">Jahaan Khet, Kaam aur Gyaan milte hain</p>
           <p className="hero-description">
             A comprehensive platform connecting farmers with skilled agricultural workers,
-            providing smart tools, weather updates, and government schemes for modern farming.
+            providing smart tools, weather updates for modern farming.
           </p>
           <div className="hero-buttons">
             <Link to="/farmer/register" className="btn btn-primary">Register as Farmer</Link>
@@ -229,21 +229,21 @@ const Home = () => {
                 <span className="contact-icon">📧</span>
                 <div>
                   <h4>Email</h4>
-                  <p>support@krishisangam.com</p>
+                  <p>shivrajsinghpipawad@gmail.com</p>
                 </div>
               </div>
               <div className="contact-item">
                 <span className="contact-icon">📱</span>
                 <div>
                   <h4>Phone</h4>
-                  <p>+91 1800-XXX-XXXX</p>
+                  <p>+91 7974703801</p>
                 </div>
               </div>
               <div className="contact-item">
                 <span className="contact-icon">📍</span>
                 <div>
                   <h4>Address</h4>
-                  <p>Agricultural Innovation Center<br/>New Delhi, India</p>
+                  <p>G-205 Ayushman Residency<br/>Indore, M.P., India</p>
                 </div>
               </div>
             </div>
