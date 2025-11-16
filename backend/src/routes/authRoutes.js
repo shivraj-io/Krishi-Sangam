@@ -1,7 +1,22 @@
 const express = require("express");
 const { registerUser, loginUser } = require("../controllers/authController");
+const { protect } = require("../middlewares/authMiddleware");
 
 const router = express.Router();
+
+// Debug endpoint to check current user
+router.get('/me', protect, (req, res) => {
+  res.json({
+    user: {
+      id: req.user._id,
+      name: req.user.fullName,
+      email: req.user.email,
+      role: req.user.role,
+      phone: req.user.phone
+    },
+    message: 'User authenticated successfully'
+  });
+});
 
 // Generic register
 router.post("/register", registerUser);

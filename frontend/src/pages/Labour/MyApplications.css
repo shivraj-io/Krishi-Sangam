@@ -6,8 +6,16 @@
 }
 
 .applications-header {
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 40px;
+  gap: 20px;
+}
+
+.applications-header > div {
+  text-align: center;
+  flex: 1;
 }
 
 .applications-header h1 {
@@ -19,6 +27,27 @@
 .applications-header p {
   color: #666;
   font-size: 1.1rem;
+}
+
+.refresh-button {
+  background: linear-gradient(135deg, #2196f3 0%, #42a5f5 100%);
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.refresh-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(33, 150, 243, 0.4);
 }
 
 .application-stats {
@@ -280,5 +309,14 @@
 
   .detail-row {
     grid-template-columns: 1fr;
+  }
+
+  .applications-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .refresh-button {
+    align-self: center;
   }
 }

@@ -8,6 +8,7 @@ const AllJobs = () => {
   const [filteredJobs, setFilteredJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [appliedJobs, setAppliedJobs] = useState(new Set());
   const [filters, setFilters] = useState({
     search: '',
     type: '',
@@ -16,6 +17,15 @@ const AllJobs = () => {
 
   useEffect(() => {
     fetchJobs();
+    fetchMyApplications();
+    
+    // Auto-refresh every 30 seconds
+    const interval = setInterval(() => {
+      fetchJobs();
+      fetchMyApplications();
+    }, 30000);
+    
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -32,6 +42,21 @@ const AllJobs = () => {
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchMyApplications = async () => {
+    try {
+      const response = await jobAPI.getMyApplications();
+      const appliedJobIds = new Set(response.data.map(app => app.job?._id));
+      setAppliedJobs(appliedJobIds);
+    } catch (err) {
+      console.error('❌ Failed to fetch applications:', err);
+      
+      if (err.response?.status === 403) {
+        console.warn('⚠️ Access denied - You may be logged in as a Farmer instead of Labour');
+        // Don't show error to user here, just log it
+      }
     }
   };
 
@@ -69,11 +94,19 @@ const AllJobs = () => {
     if (window.confirm('Are you sure you want to apply for this job?')) {
       try {
         await jobAPI.applyForJob(jobId);
+        setAppliedJobs(prev => new Set([...prev, jobId]));
         alert('Application submitted successfully!');
+        await fetchMyApplications();
       } catch (err) {
         alert(err.response?.data?.message || 'Failed to apply. You may have already applied.');
       }
     }
+  };
+
+  const handleRefresh = () => {
+    setLoading(true);
+    fetchJobs();
+    fetchMyApplications();
   };
 
   const jobTypes = ['Plowing', 'Sowing', 'Harvesting', 'Irrigation', 'Weeding', 'General Labor', 'Others'];
@@ -83,8 +116,13 @@ const AllJobs = () => {
       <Navbar />
       <div className="all-jobs-container">
         <div className="jobs-header">
-          <h1>Available Job Opportunities</h1>
-          <p>Find and apply for agricultural jobs</p>
+          <div>
+            <h1>Available Job Opportunities</h1>
+            <p>Find and apply for agricultural jobs</p>
+          </div>
+          <button onClick={handleRefresh} className="refresh-button" title="Refresh jobs">
+            🔄 Refresh
+          </button>
         </div>
 
       <div className="filters-section">
@@ -214,12 +252,22 @@ const AllJobs = () => {
               </div>
               
               <div className="job-actions">
-                <button
-                  className="apply-button"
-                  onClick={() => handleApply(job._id)}
-                >
-                  Apply Now
-                </button>
+                {appliedJobs.has(job._id) ? (
+                  <button className="applied-button" disabled>
+                    ✓ Applied
+                  </button>
+                ) : job.assignedTo ? (
+                  <button className="filled-button" disabled>
+                    Position Filled
+                  </button>
+                ) : (
+                  <button
+                    className="apply-button"
+                    onClick={() => handleApply(job._id)}
+                  >
+                    Apply Now
+                  </button>
+                )}
               </div>
             </div>
           ))}

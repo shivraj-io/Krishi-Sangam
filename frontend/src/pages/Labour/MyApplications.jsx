@@ -11,17 +11,49 @@ const MyApplications = () => {
 
   useEffect(() => {
     fetchApplications();
+    
+    // Auto-refresh every 30 seconds
+    const interval = setInterval(() => {
+      fetchApplications();
+    }, 30000);
+    
+    return () => clearInterval(interval);
   }, []);
 
   const fetchApplications = async () => {
     try {
       const response = await jobAPI.getMyApplications();
       setApplications(response.data);
+      setError(''); // Clear any previous errors
     } catch (err) {
-      setError('Failed to fetch applications');
-      console.error(err);
+      console.error('❌ Fetch Applications Error:', err);
+      
+      if (err.response?.status === 403) {
+        setError('Access Denied: ' + (err.response?.data?.message || 'You must be logged in as a Labour user to view applications. Please log out and log in with your Labour account.'));
+      } else if (err.response?.status === 401) {
+        setError('Session Expired: Please log in again');
+      } else {
+        setError('Failed to fetch applications. Please try again.');
+      }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleRefresh = () => {
+    setLoading(true);
+    fetchApplications();
+  };
+
+  const checkAuth = async () => {
+    try {
+      const response = await jobAPI.getMyApplications();
+      console.log('✅ Auth check passed:', response.data);
+    } catch (err) {
+      console.error('❌ Auth check failed:', err.response?.data);
+      if (err.response?.status === 403) {
+        alert('Authentication Error: ' + (err.response?.data?.message || 'You need to log in as a Labour user to view applications. Please log out and log in again with your Labour account.'));
+      }
     }
   };
 
@@ -54,8 +86,13 @@ const MyApplications = () => {
       <Navbar />
       <div className="my-applications-container">
         <div className="applications-header">
-          <h1>My Job Applications</h1>
-          <p>Track the status of your job applications</p>
+          <div>
+            <h1>My Job Applications</h1>
+            <p>Track the status of your job applications</p>
+          </div>
+          <button onClick={handleRefresh} className="refresh-button" title="Refresh applications">
+            🔄 Refresh
+          </button>
         </div>
 
       <div className="application-stats">

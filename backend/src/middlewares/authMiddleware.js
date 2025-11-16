@@ -25,7 +25,13 @@ const protect = async (req, res, next) => {
     if (!user) {
       return res.status(401).json({ message: "Not authorized, user not found" });
     }
-    req.user = user;
+    
+    // Ensure role is set correctly (use DB role as source of truth)
+    req.user = {
+      ...user.toObject(),
+      role: user.role
+    };
+    
     next();
   } catch (err) {
     console.error("❌ Token verification error:", err);
@@ -41,7 +47,9 @@ const authorizeRoles = (...roles) => (req, res, next) => {
     console.log("❌ Authorization failed!");
     return res
       .status(403)
-      .json({ message: "Forbidden: insufficient permissions" });
+      .json({ 
+        message: `Forbidden: This route requires ${role        localStorage.getItem('userType')  // Should show "labour"s.join(' or ')} role, but you are logged in as ${req.user?.role || 'unknown'}. Please log out and log in with the correct account.` 
+      });
   }
   
   console.log("✅ Authorization success!");

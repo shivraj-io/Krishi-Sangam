@@ -13,6 +13,13 @@ const FarmerDashboard = () => {
 
   useEffect(() => {
     fetchMyJobs();
+    
+    // Auto-refresh every 30 seconds
+    const interval = setInterval(() => {
+      fetchMyJobs();
+    }, 30000);
+    
+    return () => clearInterval(interval);
   }, []);
 
   const fetchMyJobs = async () => {
@@ -64,13 +71,23 @@ const FarmerDashboard = () => {
     }
   };
 
+  const handleRefresh = () => {
+    setLoading(true);
+    fetchMyJobs();
+  };
+
   return (
     <>
       <Navbar />
       <div className="farmer-dashboard">
         <div className="dashboard-header">
-          <h1>Welcome, {user?.name}! </h1>
-          <p>Manage your farm jobs and explore tools</p>
+          <div>
+            <h1>Welcome, {user?.name}! </h1>
+            <p>Manage your farm jobs and explore tools</p>
+          </div>
+          <button onClick={handleRefresh} className="refresh-button" title="Refresh jobs">
+            🔄 Refresh
+          </button>
         </div>
 
       <div className="dashboard-stats">
