@@ -48,7 +48,7 @@ const authorizeRoles = (...roles) => (req, res, next) => {
     return res
       .status(403)
       .json({ 
-        message: `Forbidden: This route requires ${role        localStorage.getItem('userType')  // Should show "labour"s.join(' or ')} role, but you are logged in as ${req.user?.role || 'unknown'}. Please log out and log in with the correct account.` 
+        message: `Forbidden: This route requires ${roles.join(' or ')} role, but you are logged in as ${req.user?.role || 'unknown'}. Please log out and log in with the correct account.` 
       });
   }
   
