@@ -23,6 +23,16 @@ const MyApplications = () => {
   const fetchApplications = async () => {
     try {
       const response = await jobAPI.getMyApplications();
+      console.log('📦 Applications Data:', response.data);
+      response.data.forEach((app, index) => {
+        console.log(`Application ${index + 1}:`, {
+          status: app.status,
+          paymentStatus: app.paymentStatus,
+          payoutStatus: app.payoutStatus,
+          payoutUtr: app.payoutUtr,
+          totalAmount: app.totalAmount
+        });
+      });
       setApplications(response.data);
       setError(''); // Clear any previous errors
     } catch (err) {
@@ -196,6 +206,39 @@ const MyApplications = () => {
                     The farmer will contact you soon.
                   </div>
                   
+                  {/* Debug Info - Remove this after testing */}
+                  <div style={{ 
+                    background: '#f0f0f0', 
+                    padding: '10px', 
+                    marginTop: '10px', 
+                    borderRadius: '5px',
+                    fontSize: '12px',
+                    fontFamily: 'monospace'
+                  }}>
+                    <strong>🔍 Debug Info:</strong><br/>
+                    Payment Status: {application.paymentStatus || 'null'}<br/>
+                    Payout Status: {application.payoutStatus || 'null'}<br/>
+                    Total Amount: {application.totalAmount || 'null'}<br/>
+                    UTR: {application.payoutUtr || 'null'}
+                  </div>
+                  
+                  {/* Money in Account Banner - Shown when money is received */}
+                  {application.payoutStatus === 'processed' && application.totalAmount && (
+                    <div className="money-received-banner">
+                      <div className="money-icon">💰</div>
+                      <div className="money-details">
+                        <h3>Money Received in Your Account!</h3>
+                        <p className="money-amount">₹{application.totalAmount.toLocaleString('en-IN')}</p>
+                        {application.payoutUtr && (
+                          <p className="utr-info">
+                            <strong>Bank UTR:</strong> {application.payoutUtr}
+                          </p>
+                        )}
+                        <p className="success-message">✅ Amount successfully transferred to your bank account</p>
+                      </div>
+                    </div>
+                  )}
+                  
                   {/* Payment Status Section */}
                   {application.paymentStatus && (
                     <div className={`payment-status-section ${application.paymentStatus}`}>
@@ -205,49 +248,59 @@ const MyApplications = () => {
                            application.paymentStatus === 'processing' ? '⏳' : 
                            application.paymentStatus === 'failed' ? '❌' : '⏰'}
                         </span>
-                        <span className="payment-title">Payment Status</span>
+                        <span className="payment-title">Payment Details</span>
                       </div>
                       <div className="payment-info">
                         <div className="payment-row">
-                          <span className="payment-label">Status:</span>
+                          <span className="payment-label">Payment Status:</span>
                           <span className={`payment-value status-${application.paymentStatus}`}>
-                            {application.paymentStatus === 'pending' && 'Pending Payment'}
-                            {application.paymentStatus === 'processing' && 'Processing...'}
-                            {application.paymentStatus === 'completed' && 'Payment Received ✅'}
-                            {application.paymentStatus === 'failed' && 'Payment Failed'}
-                            {application.paymentStatus === 'refunded' && 'Payment Refunded'}
+                            {application.paymentStatus === 'pending' && '⏰ Awaiting Payment'}
+                            {application.paymentStatus === 'processing' && '⏳ Processing Payment'}
+                            {application.paymentStatus === 'completed' && '✅ Payment Completed'}
+                            {application.paymentStatus === 'failed' && '❌ Payment Failed'}
+                            {application.paymentStatus === 'refunded' && '🔄 Payment Refunded'}
                           </span>
                         </div>
                         {application.totalAmount && (
                           <div className="payment-row">
-                            <span className="payment-label">Amount:</span>
-                            <span className="payment-value amount">₹{application.totalAmount}</span>
+                            <span className="payment-label">Job Amount:</span>
+                            <span className="payment-value amount">₹{application.totalAmount.toLocaleString('en-IN')}</span>
                           </div>
                         )}
                         {application.paymentStatus === 'completed' && application.job?.paymentDetails?.paidAt && (
                           <div className="payment-row">
                             <span className="payment-label">Paid on:</span>
                             <span className="payment-value">
-                              {new Date(application.job.paymentDetails.paidAt).toLocaleString()}
+                              {new Date(application.job.paymentDetails.paidAt).toLocaleString('en-IN', {
+                                day: 'numeric',
+                                month: 'short',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
                             </span>
                           </div>
                         )}
                         {application.payoutStatus && (
-                          <div className="payment-row payout-status">
-                            <span className="payment-label">Transfer Status:</span>
-                            <span className={`payment-value status-${application.payoutStatus}`}>
-                              {application.payoutStatus === 'processed' && '✅ Money Received'}
-                              {application.payoutStatus === 'processing' && '⏳ Transfer in Progress'}
-                              {application.payoutStatus === 'pending' && '⏰ Transfer Pending'}
-                              {application.payoutStatus === 'queued' && '📋 Transfer Queued'}
-                            </span>
-                          </div>
-                        )}
-                        {application.payoutUtr && (
-                          <div className="payment-row">
-                            <span className="payment-label">UTR Number:</span>
-                            <span className="payment-value utr">{application.payoutUtr}</span>
-                          </div>
+                          <>
+                            <div className="payment-row payout-status">
+                              <span className="payment-label">Transfer Status:</span>
+                              <span className={`payment-value status-${application.payoutStatus}`}>
+                                {application.payoutStatus === 'processed' && '✅ Money in Account'}
+                                {application.payoutStatus === 'processing' && '⏳ Transfer in Progress'}
+                                {application.payoutStatus === 'pending' && '⏰ Transfer Pending'}
+                                {application.payoutStatus === 'queued' && '📋 Transfer Queued'}
+                                {application.payoutStatus === 'reversed' && '🔄 Transfer Reversed'}
+                                {application.payoutStatus === 'cancelled' && '❌ Transfer Cancelled'}
+                              </span>
+                            </div>
+                            {application.payoutStatus === 'processed' && application.payoutUtr && (
+                              <div className="payment-row">
+                                <span className="payment-label">UTR Number:</span>
+                                <span className="payment-value utr">{application.payoutUtr}</span>
+                              </div>
+                            )}
+                          </>
                         )}
                       </div>
                     </div>

@@ -253,6 +253,88 @@
   font-weight: 500;
 }
 
+/* Money Received Banner */
+.money-received-banner {
+  background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 50%, #4caf50 100%);
+  border-radius: 12px;
+  padding: 25px;
+  margin: 15px 0;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 8px 25px rgba(46, 125, 50, 0.3);
+  border: 3px solid #4caf50;
+  animation: slideInUp 0.5s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.money-icon {
+  font-size: 4rem;
+  animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.money-details {
+  flex: 1;
+  color: white;
+}
+
+.money-details h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.money-amount {
+  font-size: 2.5rem;
+  font-weight: 900;
+  margin: 10px 0;
+  color: #fff;
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+  letter-spacing: 1px;
+}
+
+.utr-info {
+  font-size: 0.95rem;
+  margin: 8px 0;
+  color: #e8f5e9;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 8px 12px;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+.utr-info strong {
+  color: white;
+}
+
+.success-message {
+  margin: 10px 0 0 0;
+  font-size: 1rem;
+  color: #c8e6c9;
+  font-weight: 500;
+}
+
 /* Payment Status Styles */
 .payment-status-section {
   background: white;
@@ -358,6 +440,41 @@
   font-weight: 600;
 }
 
+.payment-value.status-processed {
+  color: #4caf50;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.payment-value.status-queued {
+  color: #2196f3;
+  font-weight: 600;
+}
+
+.payment-value.status-reversed {
+  color: #ff9800;
+  font-weight: 600;
+}
+
+.payment-value.status-cancelled {
+  color: #f44336;
+  font-weight: 600;
+}
+
+.payment-value.utr {
+  font-family: 'Courier New', monospace;
+  background: #f5f5f5;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.payout-status {
+  border-top: 2px solid rgba(0, 0, 0, 0.1);
+  padding-top: 12px !important;
+  margin-top: 8px !important;
+}
+
 .empty-state {
   text-align: center;
   padding: 80px 20px;
@@ -424,5 +541,33 @@
 
   .refresh-button {
     align-self: center;
+  }
+
+  .money-received-banner {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .money-icon {
+    font-size: 3rem;
+  }
+
+  .money-details h3 {
+    font-size: 1.2rem;
+  }
+
+  .money-amount {
+    font-size: 2rem;
+  }
+
+  .payment-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .payment-value.amount {
+    font-size: 1.5rem;
   }
 }

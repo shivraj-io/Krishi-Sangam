@@ -83,6 +83,24 @@ const CropPrediction = () => {
       <div className="prediction-content">
         <div className="prediction-form-section">
           <h2>Enter Your Parameters</h2>
+          
+          {/* Soil Health Test Info Banner */}
+          <div className="soil-health-info">
+            <div className="info-icon">ℹ️</div>
+            <div className="info-content">
+              <strong>Don't know your soil's N, P, K values?</strong>
+              <p>Get your soil tested for free! Book a Soil Health Card test.</p>
+              <a 
+                href="https://soilhealth.dac.gov.in/home" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="soil-health-link"
+              >
+                📋 Book Soil Health Test →
+              </a>
+            </div>
+          </div>
+
           <form onSubmit={handleSubmit} className="prediction-form">
             <div className="form-section">
               <h3>Soil Nutrients (kg/ha)</h3>
