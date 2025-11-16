@@ -81,4 +81,20 @@ export const labourAPI = {
   recommendLabour: (data) => api.post('/labour/recommend', data),
 };
 
+// Payment APIs
+export const paymentAPI = {
+  createOrder: (data) => api.post('/payments/create-order', data),
+  verifyPayment: (data) => api.post('/payments/verify', data),
+  getPaymentDetails: (jobId) => api.get(`/payments/job/${jobId}`),
+  getMyPayments: () => api.get('/payments/my-payments'),
+  getReceivedPayments: () => api.get('/payments/received'),
+};
+
+// Payout APIs
+export const payoutAPI = {
+  addBankDetails: (data) => api.post('/payouts/bank-details', data),
+  transferToLabour: (paymentId) => api.post('/payouts/transfer', { paymentId }),
+  getPayoutStatus: (paymentId) => api.get(`/payouts/status/${paymentId}`),
+};
+
 export default api;

@@ -10,6 +10,8 @@ const weatherRoutes = require("./routes/weatherRoutes");
 const cropRoutes = require("./routes/cropRoutes");
 const yieldRoutes = require("./routes/yieldRoutes");
 const LabourRoutes = require("./routes/predictLabourRoutes");
+const paymentRoutes = require("./routes/paymentRoutes");
+const payoutRoutes = require("./routes/payoutRoutes");
 
 const app = express();
 
@@ -26,6 +28,8 @@ app.use("/api/weather", weatherRoutes);
 app.use("/api/crop", cropRoutes);
 app.use("/api/yield", yieldRoutes);
 app.use("/api/labour", LabourRoutes);
+app.use("/api/payments", paymentRoutes);
+app.use("/api/payouts", payoutRoutes);
 
 
 

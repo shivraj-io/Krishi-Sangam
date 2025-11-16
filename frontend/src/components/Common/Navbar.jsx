@@ -79,6 +79,9 @@ const Navbar = () => {
                 <Link to="/labour/my-applications" className="navbar-link">My Applications</Link>
               </li>
               <li className="navbar-item">
+                <Link to="/labour/profile" className="navbar-link">🏦 Profile</Link>
+              </li>
+              <li className="navbar-item">
                 <span className="navbar-link user-info">👤 {user?.name}</span>
               </li>
               <li className="navbar-item">

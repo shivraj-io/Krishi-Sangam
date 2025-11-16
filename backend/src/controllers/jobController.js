@@ -202,21 +202,38 @@ const getMyApplications = async (req, res) => {
     
     console.log('📊 Found jobs with applications:', jobs.length);
     
+    // Get payment/payout info for jobs
+    const Payment = require('../models/payment.model');
+    
     // Transform to application format expected by frontend
-    const applications = jobs.map(job => {
+    const applications = await Promise.all(jobs.map(async (job) => {
       // Find this labour's application in the job
       const application = job.applications?.find(
         app => app.labour.toString() === req.user._id.toString()
       );
       
+      console.log('🔍 Job:', job.title, {
+        assignedTo: job.assignedTo,
+        labourId: req.user._id.toString(),
+        paymentStatus: job.paymentStatus,
+        totalAmount: job.totalAmount
+      });
+      
       // Determine status based on job state
       let status = 'pending';
       if (job.assignedTo && job.assignedTo.toString() === req.user._id.toString()) {
         status = 'accepted';
+        console.log('✅ Status set to ACCEPTED');
       } else if (application && !job.labourRequests.some(id => id.toString() === req.user._id.toString())) {
         // If not in labourRequests but was in applications, it was rejected
         status = 'rejected';
+        console.log('❌ Status set to REJECTED');
+      } else {
+        console.log('⏳ Status remains PENDING');
       }
+      
+      // Get payout status for this job
+      const payment = await Payment.findOne({ job: job._id, labour: req.user._id });
       
       return {
         _id: job._id,
@@ -229,12 +246,19 @@ const getMyApplications = async (req, res) => {
           duration: job.duration,
           startDate: job.date,
           type: job.type,
-          cropType: job.cropType
+          cropType: job.cropType,
+          paymentStatus: job.paymentStatus,
+          totalAmount: job.totalAmount,
+          paymentDetails: job.paymentDetails
         },
         appliedAt: application?.appliedAt || job.createdAt,
-        status: status
+        status: status,
+        paymentStatus: job.paymentStatus,
+        totalAmount: job.totalAmount,
+        payoutStatus: payment?.payoutStatus,
+        payoutUtr: payment?.payoutUtr
       };
-    });
+    }));
     
     console.log('📋 Transformed applications:', applications.length);
     

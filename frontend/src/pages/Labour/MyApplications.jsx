@@ -45,18 +45,6 @@ const MyApplications = () => {
     fetchApplications();
   };
 
-  const checkAuth = async () => {
-    try {
-      const response = await jobAPI.getMyApplications();
-      console.log('✅ Auth check passed:', response.data);
-    } catch (err) {
-      console.error('❌ Auth check failed:', err.response?.data);
-      if (err.response?.status === 403) {
-        alert('Authentication Error: ' + (err.response?.data?.message || 'You need to log in as a Labour user to view applications. Please log out and log in again with your Labour account.'));
-      }
-    }
-  };
-
   const filteredApplications = applications.filter(app => {
     if (filter === 'all') return true;
     return app.status === filter;
@@ -202,10 +190,69 @@ const MyApplications = () => {
               </div>
 
               {application.status === 'accepted' && (
-                <div className="acceptance-message">
-                  🎉 Congratulations! Your application has been accepted. 
-                  The farmer will contact you soon.
-                </div>
+                <>
+                  <div className="acceptance-message">
+                    🎉 Congratulations! Your application has been accepted. 
+                    The farmer will contact you soon.
+                  </div>
+                  
+                  {/* Payment Status Section */}
+                  {application.paymentStatus && (
+                    <div className={`payment-status-section ${application.paymentStatus}`}>
+                      <div className="payment-header">
+                        <span className="payment-icon">
+                          {application.paymentStatus === 'completed' ? '✅' : 
+                           application.paymentStatus === 'processing' ? '⏳' : 
+                           application.paymentStatus === 'failed' ? '❌' : '⏰'}
+                        </span>
+                        <span className="payment-title">Payment Status</span>
+                      </div>
+                      <div className="payment-info">
+                        <div className="payment-row">
+                          <span className="payment-label">Status:</span>
+                          <span className={`payment-value status-${application.paymentStatus}`}>
+                            {application.paymentStatus === 'pending' && 'Pending Payment'}
+                            {application.paymentStatus === 'processing' && 'Processing...'}
+                            {application.paymentStatus === 'completed' && 'Payment Received ✅'}
+                            {application.paymentStatus === 'failed' && 'Payment Failed'}
+                            {application.paymentStatus === 'refunded' && 'Payment Refunded'}
+                          </span>
+                        </div>
+                        {application.totalAmount && (
+                          <div className="payment-row">
+                            <span className="payment-label">Amount:</span>
+                            <span className="payment-value amount">₹{application.totalAmount}</span>
+                          </div>
+                        )}
+                        {application.paymentStatus === 'completed' && application.job?.paymentDetails?.paidAt && (
+                          <div className="payment-row">
+                            <span className="payment-label">Paid on:</span>
+                            <span className="payment-value">
+                              {new Date(application.job.paymentDetails.paidAt).toLocaleString()}
+                            </span>
+                          </div>
+                        )}
+                        {application.payoutStatus && (
+                          <div className="payment-row payout-status">
+                            <span className="payment-label">Transfer Status:</span>
+                            <span className={`payment-value status-${application.payoutStatus}`}>
+                              {application.payoutStatus === 'processed' && '✅ Money Received'}
+                              {application.payoutStatus === 'processing' && '⏳ Transfer in Progress'}
+                              {application.payoutStatus === 'pending' && '⏰ Transfer Pending'}
+                              {application.payoutStatus === 'queued' && '📋 Transfer Queued'}
+                            </span>
+                          </div>
+                        )}
+                        {application.payoutUtr && (
+                          <div className="payment-row">
+                            <span className="payment-label">UTR Number:</span>
+                            <span className="payment-value utr">{application.payoutUtr}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
 
               {application.status === 'rejected' && (

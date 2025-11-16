@@ -68,6 +68,24 @@ const jobSchema = new mongoose.Schema({
       default: Date.now
     }
   }],
+  paymentStatus: {
+    type: String,
+    enum: ['pending', 'processing', 'completed', 'failed', 'refunded'],
+    default: 'pending'
+  },
+  paymentDetails: {
+    orderId: String,
+    paymentId: String,
+    razorpayOrderId: String,
+    amount: Number,
+    currency: { 
+      type: String, 
+      default: 'INR' 
+    },
+    paidAt: Date,
+    receipt: String
+  },
+  totalAmount: Number,
   createdAt: {
     type: Date,
     default: Date.now

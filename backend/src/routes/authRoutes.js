@@ -1,8 +1,11 @@
 const express = require("express");
-const { registerUser, loginUser } = require("../controllers/authController");
+const { registerUser, loginUser, getProfile } = require("../controllers/authController");
 const { protect } = require("../middlewares/authMiddleware");
 
 const router = express.Router();
+
+// Get user profile
+router.get('/profile', protect, getProfile);
 
 // Debug endpoint to check current user
 router.get('/me', protect, (req, res) => {

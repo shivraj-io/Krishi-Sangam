@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { jobAPI } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import Navbar from '../../components/Common/Navbar';
+import PaymentButton from '../../components/Payment/PaymentButton';
 import './FarmerDashboard.css';
 
 const FarmerDashboard = () => {
@@ -224,6 +225,51 @@ const FarmerDashboard = () => {
                         </div>
                       );
                     })}
+                  </div>
+                )}
+
+                {/* Show Payment Section when labour is assigned */}
+                {job.assignedTo && job.paymentStatus === 'pending' && (
+                  <div className="payment-section">
+                    <h4>💳 Payment Required</h4>
+                    <div className="payment-info">
+                      <div className="payment-info-row">
+                        <span className="payment-info-label">Daily Wage:</span>
+                        <span className="payment-info-value">₹{job.wage}</span>
+                      </div>
+                      <div className="payment-info-row">
+                        <span className="payment-info-label">Duration:</span>
+                        <span className="payment-info-value">{job.duration} day(s)</span>
+                      </div>
+                      <div className="payment-info-row">
+                        <span className="payment-info-label">Total Amount:</span>
+                        <span className="payment-info-value">₹{job.wage * (parseInt(job.duration) || 1)}</span>
+                      </div>
+                    </div>
+                    <PaymentButton 
+                      job={job} 
+                      onPaymentSuccess={fetchMyJobs}
+                    />
+                  </div>
+                )}
+
+                {job.paymentStatus === 'processing' && (
+                  <div className="payment-pending">
+                    ⏳ Payment in progress...
+                  </div>
+                )}
+
+                {job.paymentStatus === 'completed' && (
+                  <div className="payment-completed">
+                    ✅ Payment completed on {new Date(job.paymentDetails?.paidAt).toLocaleDateString()}
+                    <br />
+                    <small>Amount: ₹{job.paymentDetails?.amount || job.totalAmount}</small>
+                  </div>
+                )}
+
+                {job.paymentStatus === 'failed' && (
+                  <div className="payment-failed">
+                    ❌ Payment failed. Please try again.
                   </div>
                 )}
                 

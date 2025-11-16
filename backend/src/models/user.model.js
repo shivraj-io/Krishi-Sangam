@@ -35,6 +35,21 @@ const userSchema = new mongoose.Schema({
   farmSize: Number, // Farm size in acres (for farmers)
   crops: String, // Crops grown by farmer
   skills: [String], // sirf labour ke liye useful
+  
+  // Bank Account Details (for Labour - to receive payments)
+  bankDetails: {
+    accountHolderName: String,
+    accountNumber: String,
+    ifscCode: String,
+    bankName: String,
+    upiId: String, // Alternative to bank account
+    verified: { type: Boolean, default: false }
+  },
+  
+  // Razorpay Contact & Fund Account IDs (for payouts)
+  razorpayContactId: String,
+  razorpayFundAccountId: String,
+  
   createdAt: {
     type: Date,
     default: Date.now
