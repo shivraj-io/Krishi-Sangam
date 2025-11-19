@@ -266,6 +266,18 @@ exports.verifyPayment = async (req, res) => {
       
       console.log('💰 Payment completed for job:', job.title);
       
+      // Send notification to labour about payment
+      const notificationController = require('./notificationController');
+      await notificationController.createNotification({
+        recipient: payment.labour,
+        sender: req.user._id,
+        type: 'payment_received',
+        title: '💰 Payment Received!',
+        message: `Farmer has made payment of ₹${payment.amount} for "${job.title}". Money transfer is being processed.`,
+        jobId: job._id,
+        paymentId: payment._id
+      });
+      
       // Auto-trigger payout to labour (async, don't wait)
       setTimeout(async () => {
         try {

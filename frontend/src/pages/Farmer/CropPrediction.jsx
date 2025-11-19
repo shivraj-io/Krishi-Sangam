@@ -19,16 +19,62 @@ const CropPrediction = () => {
   const [prediction, setPrediction] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [validationErrors, setValidationErrors] = useState({});
+
+  const validateField = (name, value) => {
+    const numValue = parseFloat(value);
+    const validations = {
+      nitrogen: { min: 0, max: 140, message: 'Nitrogen must be between 0-140 kg/ha' },
+      phosphorus: { min: 5, max: 145, message: 'Phosphorus must be between 5-145 kg/ha' },
+      potassium: { min: 5, max: 205, message: 'Potassium must be between 5-205 kg/ha' },
+      temperature: { min: 8, max: 45, message: 'Temperature must be between 8-45°C' },
+      humidity: { min: 10, max: 100, message: 'Humidity must be between 10-100%' },
+      ph: { min: 3.5, max: 9.5, message: 'pH must be between 3.5-9.5' },
+      rainfall: { min: 20, max: 300, message: 'Rainfall must be between 20-300 mm' }
+    };
+
+    if (validations[name]) {
+      const { min, max, message } = validations[name];
+      if (numValue < min || numValue > max) {
+        return message;
+      }
+    }
+    return null;
+  };
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
+
+    // Validate on change
+    const error = validateField(name, value);
+    setValidationErrors(prev => ({
+      ...prev,
+      [name]: error
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validate all fields before submission
+    const errors = {};
+    Object.keys(formData).forEach(key => {
+      if (key !== 'soilType' && key !== 'season') {
+        const error = validateField(key, formData[key]);
+        if (error) errors[key] = error;
+      }
+    });
+
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors);
+      setError('Please correct the errors in the form');
+      return;
+    }
+
     setError('');
     setLoading(true);
 
@@ -69,6 +115,7 @@ const CropPrediction = () => {
     });
     setPrediction(null);
     setError('');
+    setValidationErrors({});
   };
 
   return (
@@ -105,7 +152,7 @@ const CropPrediction = () => {
             <div className="form-section">
               <h3>Soil Nutrients (kg/ha)</h3>
               <div className="form-row">
-                <div className="form-group">
+                <div className={`form-group ${validationErrors.nitrogen ? 'has-error' : ''}`}>
                   <label>Nitrogen (N) *</label>
                   <input
                     type="number"
@@ -117,8 +164,9 @@ const CropPrediction = () => {
                     min="0"
                     max="140"
                   />
+                  {validationErrors.nitrogen && <span className="error-message">{validationErrors.nitrogen}</span>}
                 </div>
-                <div className="form-group">
+                <div className={`form-group ${validationErrors.phosphorus ? 'has-error' : ''}`}>
                   <label>Phosphorus (P) *</label>
                   <input
                     type="number"
@@ -127,11 +175,12 @@ const CropPrediction = () => {
                     onChange={handleChange}
                     required
                     placeholder="5-145 (e.g., 42)"
-                    min="0"
+                    min="5"
                     max="145"
                   />
+                  {validationErrors.phosphorus && <span className="error-message">{validationErrors.phosphorus}</span>}
                 </div>
-                <div className="form-group">
+                <div className={`form-group ${validationErrors.potassium ? 'has-error' : ''}`}>
                   <label>Potassium (K) *</label>
                   <input
                     type="number"
@@ -140,9 +189,10 @@ const CropPrediction = () => {
                     onChange={handleChange}
                     required
                     placeholder="5-205 (e.g., 43)"
-                    min="0"
+                    min="5"
                     max="205"
                   />
+                  {validationErrors.potassium && <span className="error-message">{validationErrors.potassium}</span>}
                 </div>
               </div>
             </div>
@@ -150,7 +200,7 @@ const CropPrediction = () => {
             <div className="form-section">
               <h3>Environmental Conditions</h3>
               <div className="form-row">
-                <div className="form-group">
+                <div className={`form-group ${validationErrors.temperature ? 'has-error' : ''}`}>
                   <label>Temperature (°C) *</label>
                   <input
                     type="number"
@@ -159,10 +209,13 @@ const CropPrediction = () => {
                     onChange={handleChange}
                     required
                     placeholder="8-45 (e.g., 25)"
+                    min="8"
+                    max="45"
                     step="0.1"
                   />
+                  {validationErrors.temperature && <span className="error-message">{validationErrors.temperature}</span>}
                 </div>
-                <div className="form-group">
+                <div className={`form-group ${validationErrors.humidity ? 'has-error' : ''}`}>
                   <label>Humidity (%) *</label>
                   <input
                     type="number"
@@ -171,14 +224,15 @@ const CropPrediction = () => {
                     onChange={handleChange}
                     required
                     placeholder="10-100 (e.g., 80)"
-                    min="0"
+                    min="10"
                     max="100"
                   />
+                  {validationErrors.humidity && <span className="error-message">{validationErrors.humidity}</span>}
                 </div>
               </div>
 
               <div className="form-row">
-                <div className="form-group">
+                <div className={`form-group ${validationErrors.ph ? 'has-error' : ''}`}>
                   <label>pH Value *</label>
                   <input
                     type="number"
@@ -187,12 +241,13 @@ const CropPrediction = () => {
                     onChange={handleChange}
                     required
                     placeholder="3.5-9.5 (e.g., 6.5)"
+                    min="3.5"
+                    max="9.5"
                     step="0.1"
-                    min="0"
-                    max="14"
                   />
+                  {validationErrors.ph && <span className="error-message">{validationErrors.ph}</span>}
                 </div>
-                <div className="form-group">
+                <div className={`form-group ${validationErrors.rainfall ? 'has-error' : ''}`}>
                   <label>Rainfall (mm) *</label>
                   <input
                     type="number"
@@ -201,8 +256,10 @@ const CropPrediction = () => {
                     onChange={handleChange}
                     required
                     placeholder="20-300 (e.g., 200)"
-                    step="0.1"
+                    min="20"
+                    max="300"
                   />
+                  {validationErrors.rainfall && <span className="error-message">{validationErrors.rainfall}</span>}
                 </div>
               </div>
             </div>

@@ -324,6 +324,17 @@ const acceptApplication = async (req, res) => {
     
     console.log('✅ Application accepted and labour assigned');
     
+    // Create notification for labour
+    const notificationController = require('./notificationController');
+    await notificationController.createNotification({
+      recipient: labourId,
+      sender: req.user._id,
+      type: 'application_accepted',
+      title: '🎉 Application Accepted!',
+      message: `Your application for "${job.title}" has been accepted by the farmer. They will contact you soon.`,
+      jobId: job._id
+    });
+    
     res.json({ 
       message: "Application accepted successfully", 
       job 
@@ -364,6 +375,17 @@ const rejectApplication = async (req, res) => {
     await job.save();
     
     console.log('❌ Application rejected and removed');
+    
+    // Create notification for labour
+    const notificationController = require('./notificationController');
+    await notificationController.createNotification({
+      recipient: labourId,
+      sender: req.user._id,
+      type: 'application_rejected',
+      title: 'Application Not Selected',
+      message: `Your application for "${job.title}" was not selected. Don't worry, keep applying to other jobs!`,
+      jobId: job._id
+    });
     
     res.json({ 
       message: "Application rejected successfully", 

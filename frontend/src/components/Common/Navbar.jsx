@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import NotificationDropdown from './NotificationDropdown';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -61,7 +62,13 @@ const Navbar = () => {
                 </div>
               </li>
               <li className="navbar-item">
-                <span className="navbar-link user-info">👤 {user?.name}</span>
+                <NotificationDropdown />
+              </li>
+              <li className="navbar-item">
+                <span className="navbar-link user-profile">
+                  <span className="user-avatar">👤</span>
+                  <span className="user-name">{user?.name}</span>
+                </span>
               </li>
               <li className="navbar-item">
                 <button onClick={handleLogout} className="navbar-link logout-btn">Logout</button>
@@ -79,10 +86,13 @@ const Navbar = () => {
                 <Link to="/labour/my-applications" className="navbar-link">My Applications</Link>
               </li>
               <li className="navbar-item">
-                <Link to="/labour/profile" className="navbar-link">🏦 Profile</Link>
+                <NotificationDropdown />
               </li>
               <li className="navbar-item">
-                <span className="navbar-link user-info">👤 {user?.name}</span>
+                <Link to="/labour/profile" className="navbar-link user-profile">
+                  <span className="user-avatar">👤</span>
+                  <span className="user-name">{user?.name}</span>
+                </Link>
               </li>
               <li className="navbar-item">
                 <button onClick={handleLogout} className="navbar-link logout-btn">Logout</button>

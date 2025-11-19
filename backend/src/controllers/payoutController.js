@@ -167,6 +167,17 @@ exports.transferToLabour = async (req, res) => {
       payment.transferredAt = new Date();
       await payment.save();
       
+      // Send notification to labour about money transfer
+      const notificationController = require('./notificationController');
+      await notificationController.createNotification({
+        recipient: labour._id,
+        type: 'money_transferred',
+        title: '✅ Money Received in Account!',
+        message: `₹${payment.amount} has been successfully transferred to your bank account. UTR: ${payment.payoutUtr}`,
+        jobId: payment.job,
+        paymentId: payment._id
+      });
+      
       return res.json({
         success: true,
         message: 'Mock transfer completed',

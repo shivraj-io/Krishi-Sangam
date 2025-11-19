@@ -124,6 +124,11 @@
 .form-group {
   display: flex;
   flex-direction: column;
+  position: relative;
+}
+
+.form-group.has-error input {
+  border-color: #f44336;
 }
 
 .form-group label {
@@ -133,13 +138,26 @@
   font-size: 0.9rem;
 }
 
+.error-message {
+  color: #f44336;
+  font-size: 0.8rem;
+  margin-top: 5px;
+  animation: shake 0.3s;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
 .form-group input,
 .form-group select {
   padding: 10px 12px;
   border: 2px solid #e0e0e0;
   border-radius: 5px;
   font-size: 0.95rem;
-  transition: border-color 0.3s;
+  transition: border-color 0.3s, box-shadow 0.3s;
   color: #333;
 }
 
@@ -152,6 +170,7 @@
 .form-group select:focus {
   outline: none;
   border-color: #4caf50;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
 }
 
 .form-actions {
@@ -333,7 +352,7 @@
   border-bottom: none;
 }
 
-.error-message {
+.prediction-result .error-message {
   background-color: #ffebee;
   color: #c62828;
   padding: 12px;

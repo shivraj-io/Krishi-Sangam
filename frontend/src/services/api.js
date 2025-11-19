@@ -97,4 +97,13 @@ export const payoutAPI = {
   getPayoutStatus: (paymentId) => api.get(`/payouts/status/${paymentId}`),
 };
 
+// Notification APIs
+export const notificationAPI = {
+  getAll: () => api.get('/notifications'),
+  getUnreadCount: () => api.get('/notifications/unread-count'),
+  markAsRead: (notificationId) => api.patch(`/notifications/${notificationId}/read`),
+  markAllAsRead: () => api.patch('/notifications/mark-all-read'),
+  deleteNotification: (notificationId) => api.delete(`/notifications/${notificationId}`),
+};
+
 export default api;
