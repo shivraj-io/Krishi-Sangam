@@ -16,20 +16,118 @@ const FarmerRegister = () => {
     crops: '',
   });
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
 
+  const validateField = (name, value) => {
+    let error = '';
+
+    switch (name) {
+      case 'name':
+        if (!value.trim()) {
+          error = 'Name is required';
+        } else if (value.trim().length < 2) {
+          error = 'Name must be at least 2 characters';
+        } else if (!/^[a-zA-Z\s]+$/.test(value)) {
+          error = 'Name can only contain letters and spaces';
+        }
+        break;
+
+      case 'email':
+        if (!value) {
+          error = 'Email is required';
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          error = 'Please enter a valid email address';
+        }
+        break;
+
+      case 'phone':
+        if (!value) {
+          error = 'Phone number is required';
+        } else if (!/^[6-9]\d{9}$/.test(value)) {
+          error = 'Please enter a valid 10-digit Indian mobile number';
+        }
+        break;
+
+      case 'address':
+        if (!value.trim()) {
+          error = 'Address is required';
+        } else if (value.trim().length < 10) {
+          error = 'Please enter a complete address (minimum 10 characters)';
+        }
+        break;
+
+      case 'farmSize':
+        if (value && (isNaN(value) || parseFloat(value) <= 0)) {
+          error = 'Farm size must be a positive number';
+        } else if (value && parseFloat(value) > 10000) {
+          error = 'Please enter a valid farm size';
+        }
+        break;
+
+      case 'password':
+        if (!value) {
+          error = 'Password is required';
+        } else if (value.length < 6) {
+          error = 'Password must be at least 6 characters';
+        } else if (!/(?=.*[a-z])/.test(value)) {
+          error = 'Password must contain at least one lowercase letter';
+        } else if (!/(?=.*[A-Z])/.test(value)) {
+          error = 'Password must contain at least one uppercase letter';
+        } else if (!/(?=.*\d)/.test(value)) {
+          error = 'Password must contain at least one number';
+        }
+        break;
+
+      case 'confirmPassword':
+        if (!value) {
+          error = 'Please confirm your password';
+        } else if (value !== formData.password) {
+          error = 'Passwords do not match';
+        }
+        break;
+
+      default:
+        break;
+    }
+
+    return error;
+  };
+
   const handleChange = (e) => {
+    const { name, value } = e.target;
+    
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
+
+    // Real-time validation
+    const error = validateField(name, value);
+    setFieldErrors(prev => ({
+      ...prev,
+      [name]: error
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    // Validate all fields
+    const errors = {};
+    Object.keys(formData).forEach(key => {
+      const error = validateField(key, formData[key]);
+      if (error) errors[key] = error;
+    });
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      setError('Please fix all errors before submitting');
+      return;
+    }
 
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
@@ -79,7 +177,9 @@ const FarmerRegister = () => {
               onChange={handleChange}
               required
               placeholder="Enter your full name"
+              className={fieldErrors.name ? 'input-error' : ''}
             />
+            {fieldErrors.name && <span className="error-text">{fieldErrors.name}</span>}
           </div>
 
           <div className="form-group">
@@ -91,7 +191,9 @@ const FarmerRegister = () => {
               onChange={handleChange}
               required
               placeholder="Enter your email"
+              className={fieldErrors.email ? 'input-error' : ''}
             />
+            {fieldErrors.email && <span className="error-text">{fieldErrors.email}</span>}
           </div>
 
           <div className="form-group">
@@ -102,8 +204,11 @@ const FarmerRegister = () => {
               value={formData.phone}
               onChange={handleChange}
               required
-              placeholder="Enter your phone number"
+              placeholder="Enter 10-digit mobile number"
+              maxLength="10"
+              className={fieldErrors.phone ? 'input-error' : ''}
             />
+            {fieldErrors.phone && <span className="error-text">{fieldErrors.phone}</span>}
           </div>
 
           <div className="form-group">
@@ -113,9 +218,11 @@ const FarmerRegister = () => {
               value={formData.address}
               onChange={handleChange}
               required
-              placeholder="Enter your address"
+              placeholder="Enter your complete address"
               rows="3"
+              className={fieldErrors.address ? 'input-error' : ''}
             />
+            {fieldErrors.address && <span className="error-text">{fieldErrors.address}</span>}
           </div>
 
           <div className="form-group">
@@ -126,7 +233,11 @@ const FarmerRegister = () => {
               value={formData.farmSize}
               onChange={handleChange}
               placeholder="Enter farm size"
+              min="0"
+              step="0.01"
+              className={fieldErrors.farmSize ? 'input-error' : ''}
             />
+            {fieldErrors.farmSize && <span className="error-text">{fieldErrors.farmSize}</span>}
           </div>
 
           <div className="form-group">
@@ -148,9 +259,11 @@ const FarmerRegister = () => {
               value={formData.password}
               onChange={handleChange}
               required
-              placeholder="Enter password"
+              placeholder="Min 6 chars, 1 uppercase, 1 number"
               minLength="6"
+              className={fieldErrors.password ? 'input-error' : ''}
             />
+            {fieldErrors.password && <span className="error-text">{fieldErrors.password}</span>}
           </div>
 
           <div className="form-group">
@@ -162,7 +275,9 @@ const FarmerRegister = () => {
               onChange={handleChange}
               required
               placeholder="Confirm password"
+              className={fieldErrors.confirmPassword ? 'input-error' : ''}
             />
+            {fieldErrors.confirmPassword && <span className="error-text">{fieldErrors.confirmPassword}</span>}
           </div>
 
           <button type="submit" className="auth-button" disabled={loading}>

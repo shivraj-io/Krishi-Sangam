@@ -200,6 +200,44 @@
   font-family: inherit;
 }
 
+/* Validation Error Styles */
+.input-error {
+  border-color: #f44336 !important;
+  background: rgba(244, 67, 54, 0.1) !important;
+  animation: shake 0.4s ease-in-out;
+}
+
+.input-error:focus {
+  box-shadow: 0 0 0 4px rgba(244, 67, 54, 0.3) !important;
+}
+
+.error-text {
+  color: #ff5252;
+  font-size: 0.85rem;
+  margin-top: 6px;
+  display: block;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .auth-button {
   background: linear-gradient(135deg, #2e7d32 0%, #4caf50 50%, #66bb6a 100%);
   color: white;
