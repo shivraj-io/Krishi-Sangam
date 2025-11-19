@@ -271,36 +271,140 @@
   border-radius: 5px;
 }
 
+@media (max-width: 1024px) {
+  .job-info-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
+  .all-jobs-container {
+    padding: 20px 15px;
+    padding-top: 90px;
+  }
+
+  .jobs-header {
+    flex-direction: column;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
   .jobs-header h1 {
     font-size: 2rem;
   }
 
+  .jobs-header p {
+    font-size: 1rem;
+  }
+
+  .refresh-button {
+    align-self: center;
+    width: 100%;
+    max-width: 300px;
+    justify-content: center;
+  }
+
   .filters-section {
     grid-template-columns: 1fr;
+    padding: 20px;
+  }
+
+  .job-item {
+    padding: 20px;
   }
 
   .job-title-section {
     flex-direction: column;
     align-items: start;
+    gap: 10px;
+  }
+
+  .job-title-section h3 {
+    font-size: 1.3rem;
   }
 
   .job-info-grid {
     grid-template-columns: 1fr;
+    padding: 15px;
+  }
+
+  .info-item {
+    gap: 10px;
+  }
+
+  .info-icon {
+    font-size: 1.5rem;
   }
 
   .apply-button,
   .applied-button,
   .filled-button {
     width: 100%;
+    padding: 12px;
+    font-size: 1rem;
   }
 
-  .jobs-header {
-    flex-direction: column;
-    text-align: center;
+  .empty-state {
+    padding: 60px 20px;
+  }
+
+  .empty-icon {
+    font-size: 4rem;
+  }
+
+  .empty-state h3 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .all-jobs-container {
+    padding: 15px 10px;
+    padding-top: 85px;
+  }
+
+  .jobs-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .filters-section {
+    padding: 15px;
+  }
+
+  .filter-input,
+  .filter-select {
+    padding: 10px 12px;
+    font-size: 0.95rem;
+  }
+
+  .job-item {
+    padding: 15px;
+  }
+
+  .job-title-section h3 {
+    font-size: 1.2rem;
+  }
+
+  .job-type-badge {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+
+  .job-desc {
+    font-size: 0.95rem;
+  }
+
+  .info-icon {
+    font-size: 1.3rem;
+  }
+
+  .info-label,
+  .info-value {
+    font-size: 0.9rem;
   }
 
   .refresh-button {
-    align-self: center;
+    padding: 10px 20px;
+    font-size: 0.95rem;
   }
 }

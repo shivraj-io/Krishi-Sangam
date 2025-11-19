@@ -137,12 +137,29 @@
 }
 
 @media (max-width: 768px) {
+  .create-job-container {
+    padding: 20px 15px;
+    padding-top: 90px;
+  }
+
   .create-job-card {
-    padding: 30px 20px;
+    padding: 25px 20px;
+  }
+
+  .create-job-card h1 {
+    font-size: 1.8rem;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
   }
 
   .form-row {
     grid-template-columns: 1fr;
+  }
+
+  .form-section-title {
+    font-size: 1rem;
   }
 
   .form-actions {
@@ -152,5 +169,37 @@
   .btn-cancel,
   .btn-submit {
     width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .create-job-container {
+    padding: 15px 10px;
+    padding-top: 85px;
+  }
+
+  .create-job-card {
+    padding: 20px 15px;
+  }
+
+  .create-job-card h1 {
+    font-size: 1.5rem;
+  }
+
+  .form-group label {
+    font-size: 0.9rem;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  .btn-cancel,
+  .btn-submit {
+    padding: 10px 20px;
+    font-size: 0.95rem;
   }
 }

@@ -606,41 +606,84 @@
   border-radius: 5px;
 }
 
+@media (max-width: 1024px) {
+  .application-stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
+  .my-applications-container {
+    padding: 20px 15px;
+    padding-top: 90px;
+  }
+
+  .applications-header {
+    flex-direction: column;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
   .applications-header h1 {
     font-size: 2rem;
+  }
+
+  .applications-header p {
+    font-size: 1rem;
+  }
+
+  .refresh-button {
+    align-self: center;
+    width: 100%;
+    max-width: 300px;
+    justify-content: center;
+  }
+
+  .application-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stat-box {
+    padding: 20px;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+  }
+
+  .filter-tabs {
+    flex-wrap: wrap;
+    padding: 12px;
+  }
+
+  .tab {
+    min-width: calc(50% - 5px);
+    padding: 10px 15px;
+  }
+
+  .application-card {
+    padding: 20px;
   }
 
   .application-title {
     flex-direction: column;
     align-items: start;
+    gap: 10px;
   }
 
-  .filter-tabs {
-    flex-direction: column;
-  }
-
-  .tab {
-    width: 100%;
+  .application-title h3 {
+    font-size: 1.3rem;
   }
 
   .detail-row {
     grid-template-columns: 1fr;
   }
 
-  .applications-header {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .refresh-button {
-    align-self: center;
-  }
-
   .money-received-banner {
     flex-direction: column;
     text-align: center;
     padding: 20px;
+    gap: 15px;
   }
 
   .money-icon {
@@ -648,7 +691,7 @@
   }
 
   .money-details h3 {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
   }
 
   .money-amount {
@@ -663,5 +706,89 @@
 
   .payment-value.amount {
     font-size: 1.5rem;
+  }
+
+  .section-divider h2 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .my-applications-container {
+    padding: 15px 10px;
+    padding-top: 85px;
+  }
+
+  .applications-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .application-stats {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .stat-value {
+    font-size: 1.8rem;
+  }
+
+  .filter-tabs {
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .tab {
+    width: 100%;
+    min-width: 100%;
+    padding: 10px;
+  }
+
+  .application-card {
+    padding: 15px;
+  }
+
+  .application-title h3 {
+    font-size: 1.2rem;
+  }
+
+  .status-badge {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+
+  .application-description {
+    font-size: 0.95rem;
+  }
+
+  .detail-item {
+    font-size: 0.9rem;
+  }
+
+  .detail-icon {
+    font-size: 1.2rem;
+  }
+
+  .refresh-button {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+  }
+
+  .money-icon {
+    font-size: 2.5rem;
+  }
+
+  .money-details h3 {
+    font-size: 1.1rem;
+  }
+
+  .money-amount {
+    font-size: 1.8rem;
+  }
+
+  .card-badge {
+    top: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    font-size: 0.7rem;
   }
 }

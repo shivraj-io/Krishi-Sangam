@@ -206,24 +206,160 @@
 }
 
 @media (max-width: 768px) {
-  .weather-main {
-    flex-direction: column;
-    text-align: center;
+  .weather-container {
+    padding: 20px 15px;
+    padding-top: 90px;
   }
 
-  .weather-icon-large {
-    font-size: 5rem;
+  .weather-header h1 {
+    font-size: 2rem;
   }
 
-  .temperature {
-    font-size: 3rem;
+  .weather-header p {
+    font-size: 1rem;
+  }
+
+  .weather-search {
+    padding: 25px 20px;
   }
 
   .weather-search form {
     flex-direction: column;
   }
 
+  .search-btn,
+  .location-btn {
+    width: 100%;
+  }
+
+  .weather-main {
+    flex-direction: column;
+    text-align: center;
+    padding: 40px 25px;
+  }
+
+  .weather-icon-large {
+    font-size: 5rem;
+  }
+
+  .weather-info h2 {
+    font-size: 1.6rem;
+  }
+
+  .temperature {
+    font-size: 3rem;
+  }
+
+  .weather-description {
+    font-size: 1.1rem;
+  }
+
   .weather-details-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    padding: 25px 20px;
+  }
+
+  .weather-detail-card {
+    padding: 15px;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .detail-icon {
+    font-size: 2rem;
+  }
+
+  .detail-value {
+    font-size: 1.2rem;
+  }
+
+  .farming-tips {
+    padding: 25px 20px;
+  }
+
+  .farming-tips h3 {
+    font-size: 1.3rem;
+  }
+
+  .tip {
+    padding: 12px 15px;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .weather-container {
+    padding: 15px 10px;
+    padding-top: 85px;
+  }
+
+  .weather-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .weather-search {
+    padding: 20px 15px;
+  }
+
+  .search-input {
+    padding: 10px 15px;
+    font-size: 0.95rem;
+  }
+
+  .search-btn,
+  .location-btn {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+  }
+
+  .weather-main {
+    padding: 30px 20px;
+  }
+
+  .weather-icon-large {
+    font-size: 4rem;
+  }
+
+  .weather-info h2 {
+    font-size: 1.4rem;
+  }
+
+  .temperature {
+    font-size: 2.5rem;
+  }
+
+  .weather-description {
+    font-size: 1rem;
+  }
+
+  .weather-details-grid {
+    grid-template-columns: 1fr;
+    padding: 20px 15px;
+  }
+
+  .weather-detail-card {
+    padding: 12px;
+  }
+
+  .detail-icon {
+    font-size: 1.8rem;
+  }
+
+  .detail-value {
+    font-size: 1.1rem;
+  }
+
+  .farming-tips {
+    padding: 20px 15px;
+  }
+
+  .farming-tips h3 {
+    font-size: 1.2rem;
+  }
+
+  .tip {
+    padding: 10px 12px;
+    font-size: 0.9rem;
   }
 }

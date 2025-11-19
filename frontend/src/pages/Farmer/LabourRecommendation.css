@@ -652,27 +652,103 @@
   cursor: not-allowed;
 }
 
+@media (max-width: 1024px) {
+  .recommendations-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .prediction-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
+  .labour-recommendation-container {
+    padding: 20px 15px;
+    padding-top: 90px;
+  }
+
   .recommendation-header h1 {
     font-size: 2rem;
+  }
+
+  .recommendation-header p {
+    font-size: 1rem;
+  }
+
+  .recommendation-form-card {
+    padding: 25px 20px;
+  }
+
+  .recommendation-form-card h2 {
+    font-size: 1.3rem;
   }
 
   .form-row {
     grid-template-columns: 1fr;
   }
 
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .btn-reset,
+  .btn-search {
+    width: 100%;
+  }
+
   .recommendations-grid {
     grid-template-columns: 1fr;
   }
 
+  .labour-card {
+    padding: 20px;
+  }
+
   .labour-header {
-    flex-direction: column;
+    flex-direction: row;
+    gap: 12px;
+  }
+
+  .labour-avatar {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+  }
+
+  .labour-info h3 {
+    font-size: 1.2rem;
   }
 
   .match-badge {
-    position: static;
-    margin-top: 10px;
-    display: inline-block;
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  .labour-actions {
+    flex-direction: column;
+  }
+
+  .btn-view-profile,
+  .btn-contact {
+    width: 100%;
+  }
+
+  .prediction-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-box {
+    padding: 15px;
+  }
+
+  .ml-prediction-card {
+    padding: 25px 20px;
+  }
+
+  .ml-prediction-card h2 {
+    font-size: 1.5rem;
   }
 
   .modal-content {
@@ -686,5 +762,102 @@
 
   .modal-body {
     padding: 20px;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+  }
+
+  .btn-cancel,
+  .btn-submit {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .labour-recommendation-container {
+    padding: 15px 10px;
+    padding-top: 85px;
+  }
+
+  .recommendation-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .recommendation-form-card {
+    padding: 20px 15px;
+  }
+
+  .recommendation-form-card h2 {
+    font-size: 1.2rem;
+  }
+
+  .form-group label {
+    font-size: 0.85rem;
+  }
+
+  .form-group input,
+  .form-group select {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  .btn-reset,
+  .btn-search {
+    padding: 10px 15px;
+    font-size: 0.95rem;
+  }
+
+  .labour-card {
+    padding: 15px;
+  }
+
+  .labour-avatar {
+    width: 45px;
+    height: 45px;
+    font-size: 1.3rem;
+  }
+
+  .labour-info h3 {
+    font-size: 1.1rem;
+  }
+
+  .labour-rating {
+    font-size: 0.85rem;
+  }
+
+  .detail-item {
+    font-size: 0.9rem;
+  }
+
+  .skill-tag {
+    font-size: 0.8rem;
+    padding: 3px 8px;
+  }
+
+  .stat-box {
+    padding: 12px;
+  }
+
+  .stat-icon {
+    font-size: 2rem;
+  }
+
+  .stat-box h3 {
+    font-size: 1.5rem;
+  }
+
+  .ml-prediction-card h2 {
+    font-size: 1.3rem;
+  }
+
+  .modal-header h2 {
+    font-size: 1.3rem;
+  }
+
+  .modal-close {
+    font-size: 1.5rem;
+    width: 30px;
+    height: 30px;
   }
 }

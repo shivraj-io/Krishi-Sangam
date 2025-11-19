@@ -309,15 +309,134 @@
 }
 
 @media (max-width: 768px) {
-  .form-row {
-    grid-template-columns: 1fr;
+  .yield-prediction-container {
+    padding: 20px 15px;
+    padding-top: 90px;
   }
 
   .prediction-header h1 {
     font-size: 2rem;
   }
 
+  .prediction-header p {
+    font-size: 1rem;
+  }
+
+  .prediction-form-section,
+  .prediction-result {
+    padding: 25px 20px;
+  }
+
+  .prediction-form-section h2,
+  .prediction-result h2 {
+    font-size: 1.4rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .btn-reset,
+  .btn-predict {
+    width: 100%;
+  }
+
+  .result-main {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
+
+  .result-icon {
+    font-size: 3rem;
+  }
+
   .result-value h3 {
     font-size: 2rem;
+  }
+
+  .production-value {
+    font-size: 1.8rem;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .recommendations h3,
+  .total-production h3,
+  .input-summary h3 {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .yield-prediction-container {
+    padding: 15px 10px;
+    padding-top: 85px;
+  }
+
+  .prediction-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .prediction-form-section,
+  .prediction-result {
+    padding: 20px 15px;
+  }
+
+  .prediction-form-section h2,
+  .prediction-result h2 {
+    font-size: 1.2rem;
+  }
+
+  .form-group label {
+    font-size: 0.85rem;
+  }
+
+  .form-group input,
+  .form-group select {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  .btn-reset,
+  .btn-predict {
+    padding: 10px 15px;
+    font-size: 0.95rem;
+  }
+
+  .result-card {
+    padding: 20px 15px;
+  }
+
+  .result-icon {
+    font-size: 2.5rem;
+  }
+
+  .result-value h3 {
+    font-size: 1.8rem;
+  }
+
+  .production-value {
+    font-size: 1.6rem;
+  }
+
+  .total-production h3,
+  .input-summary h3,
+  .recommendations h3 {
+    font-size: 1.1rem;
+  }
+
+  .summary-item {
+    font-size: 0.9rem;
+  }
+
+  .recommendations ul li {
+    font-size: 0.9rem;
   }
 }

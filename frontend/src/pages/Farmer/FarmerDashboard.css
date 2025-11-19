@@ -404,17 +404,87 @@
   transform: scale(1.05);
 }
 
+@media (max-width: 1024px) {
+  .dashboard-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dashboard-header h1 {
+    font-size: 2.5rem;
+  }
+}
+
 @media (max-width: 768px) {
+  .farmer-dashboard {
+    padding: 20px 15px;
+    padding-top: 100px;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
   .dashboard-header h1 {
     font-size: 2rem;
+  }
+
+  .dashboard-header p {
+    font-size: 1rem;
+  }
+
+  .refresh-button {
+    align-self: center;
+    width: 100%;
+    max-width: 300px;
+    justify-content: center;
+  }
+
+  .dashboard-stats {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .stat-card {
+    padding: 20px;
+  }
+
+  .stat-icon {
+    font-size: 2.5rem;
+  }
+
+  .stat-info h3 {
+    font-size: 2rem;
+  }
+
+  .actions-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .action-card {
+    padding: 25px;
+  }
+
+  .action-icon {
+    font-size: 3rem;
+  }
+
+  .jobs-grid {
+    grid-template-columns: 1fr;
   }
 
   .job-details {
     grid-template-columns: 1fr;
   }
 
-  .actions-grid {
-    grid-template-columns: 1fr;
+  .job-actions {
+    flex-direction: column;
+  }
+
+  .btn-view,
+  .btn-delete {
+    width: 100%;
   }
 
   .applicant-card {
@@ -431,13 +501,48 @@
   .btn-reject {
     flex: 1;
   }
+}
 
-  .dashboard-header {
-    flex-direction: column;
-    text-align: center;
+@media (max-width: 480px) {
+  .farmer-dashboard {
+    padding: 15px 10px;
+    padding-top: 90px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .stat-card {
+    padding: 15px;
+  }
+
+  .stat-icon {
+    font-size: 2rem;
+  }
+
+  .stat-info h3 {
+    font-size: 1.8rem;
+  }
+
+  .stat-info p {
+    font-size: 0.9rem;
+  }
+
+  .action-card {
+    padding: 20px;
+  }
+
+  .action-icon {
+    font-size: 2.5rem;
+  }
+
+  .job-card {
+    padding: 15px;
   }
 
   .refresh-button {
-    align-self: center;
+    padding: 10px 20px;
+    font-size: 0.95rem;
   }
 }
