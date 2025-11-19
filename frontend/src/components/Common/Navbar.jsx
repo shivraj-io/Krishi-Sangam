@@ -86,6 +86,9 @@ const Navbar = () => {
                 <Link to="/labour/my-applications" className="navbar-link">My Applications</Link>
               </li>
               <li className="navbar-item">
+                <Link to="/labour/work-requests" className="navbar-link">Work Requests</Link>
+              </li>
+              <li className="navbar-item">
                 <NotificationDropdown />
               </li>
               <li className="navbar-item">

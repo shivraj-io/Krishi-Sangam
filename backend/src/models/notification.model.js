@@ -19,6 +19,7 @@ const notificationSchema = new mongoose.Schema({
       'money_transferred',
       'new_application',
       'job_completed',
+      'work_request',
       'general'
     ],
     required: true

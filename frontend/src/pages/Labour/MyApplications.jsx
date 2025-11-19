@@ -1,30 +1,37 @@
 import { useState, useEffect } from 'react';
-import { jobAPI } from '../../services/api';
+import { jobAPI, workRequestAPI } from '../../services/api';
 import Navbar from '../../components/Common/Navbar';
 import './MyApplications.css';
 
 const MyApplications = () => {
   const [applications, setApplications] = useState([]);
+  const [workRequests, setWorkRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [filter, setFilter] = useState('all');
 
   useEffect(() => {
-    fetchApplications();
+    fetchAllData();
     
     // Auto-refresh every 30 seconds
     const interval = setInterval(() => {
-      fetchApplications();
+      fetchAllData();
     }, 30000);
     
     return () => clearInterval(interval);
   }, []);
 
-  const fetchApplications = async () => {
+  const fetchAllData = async () => {
     try {
-      const response = await jobAPI.getMyApplications();
-      console.log('📦 Applications Data:', response.data);
-      response.data.forEach((app, index) => {
+      const [applicationsRes, workRequestsRes] = await Promise.all([
+        jobAPI.getMyApplications(),
+        workRequestAPI.getReceivedRequests()
+      ]);
+      
+      console.log('📦 Applications Data:', applicationsRes.data);
+      console.log('📬 Work Requests Data:', workRequestsRes.data);
+      
+      applicationsRes.data.forEach((app, index) => {
         console.log(`Application ${index + 1}:`, {
           status: app.status,
           paymentStatus: app.paymentStatus,
@@ -33,10 +40,12 @@ const MyApplications = () => {
           totalAmount: app.totalAmount
         });
       });
-      setApplications(response.data);
+      
+      setApplications(applicationsRes.data);
+      setWorkRequests(workRequestsRes.data?.requests || []);
       setError(''); // Clear any previous errors
     } catch (err) {
-      console.error('❌ Fetch Applications Error:', err);
+      console.error('❌ Fetch Data Error:', err);
       
       if (err.response?.status === 403) {
         setError('Access Denied: ' + (err.response?.data?.message || 'You must be logged in as a Labour user to view applications. Please log out and log in with your Labour account.'));
@@ -52,12 +61,17 @@ const MyApplications = () => {
 
   const handleRefresh = () => {
     setLoading(true);
-    fetchApplications();
+    fetchAllData();
   };
 
   const filteredApplications = applications.filter(app => {
     if (filter === 'all') return true;
     return app.status === filter;
+  });
+
+  const filteredWorkRequests = workRequests.filter(req => {
+    if (filter === 'all') return true;
+    return req.status === filter;
   });
 
   const getStatusBadgeClass = (status) => {
@@ -73,10 +87,13 @@ const MyApplications = () => {
   };
 
   const stats = {
-    total: applications.length,
-    pending: applications.filter(app => app.status === 'pending').length,
-    accepted: applications.filter(app => app.status === 'accepted').length,
-    rejected: applications.filter(app => app.status === 'rejected').length,
+    total: applications.length + workRequests.length,
+    pending: applications.filter(app => app.status === 'pending').length + 
+             workRequests.filter(req => req.status === 'pending').length,
+    accepted: applications.filter(app => app.status === 'accepted').length + 
+              workRequests.filter(req => req.status === 'accepted').length,
+    rejected: applications.filter(app => app.status === 'rejected').length + 
+              workRequests.filter(req => req.status === 'rejected').length,
   };
 
   return (
@@ -143,7 +160,7 @@ const MyApplications = () => {
         <div className="loading">Loading applications...</div>
       ) : error ? (
         <div className="error-message">{error}</div>
-      ) : filteredApplications.length === 0 ? (
+      ) : (filteredApplications.length === 0 && filteredWorkRequests.length === 0) ? (
         <div className="empty-state">
           <div className="empty-icon">📋</div>
           <h3>No applications found</h3>
@@ -154,8 +171,120 @@ const MyApplications = () => {
         </div>
       ) : (
         <div className="applications-list">
-          {filteredApplications.map((application) => (
-            <div key={application._id} className="application-card">
+          {/* Work Requests Section */}
+          {filteredWorkRequests.length > 0 && (
+            <>
+              <div className="section-divider">
+                <h2>📬 Work Requests from Farmers</h2>
+              </div>
+              {filteredWorkRequests.map((request) => (
+                <div key={`request-${request._id}`} className="application-card work-request-card">
+                  <div className="card-badge">Work Request</div>
+                  <div className="application-header">
+                    <div className="application-title">
+                      <h3>{request.jobType || 'Work Request'} - {request.cropType || 'Farming'}</h3>
+                      <span className={`status-badge ${getStatusBadgeClass(request.status)}`}>
+                        {request.status.toUpperCase()}
+                      </span>
+                    </div>
+                    <div className="application-date">
+                      Received on: {new Date(request.createdAt).toLocaleDateString()}
+                    </div>
+                  </div>
+
+                  <div className="farmer-info-section">
+                    <span className="info-icon">👨‍🌾</span>
+                    <span><strong>From:</strong> {request.farmer?.fullName 
+                      ? `${request.farmer.fullName.firstName} ${request.farmer.fullName.lastName || ''}`.trim()
+                      : 'Farmer'}</span>
+                  </div>
+
+                  {request.message && (
+                    <p className="request-message">
+                      <span className="message-icon">💬</span>
+                      {request.message}
+                    </p>
+                  )}
+
+                  <div className="application-details">
+                    <div className="detail-row">
+                      <div className="detail-item">
+                        <span className="detail-icon">📍</span>
+                        <span><strong>Location:</strong> {
+                          request.location 
+                            ? `${request.location.village || ''}, ${request.location.district || ''}, ${request.location.state || ''}`.replace(/, ,/g, ',').trim()
+                            : 'Not specified'
+                        }</span>
+                      </div>
+                      <div className="detail-item">
+                        <span className="detail-icon">💰</span>
+                        <span><strong>Wage:</strong> ₹{request.wage || 0}/day</span>
+                      </div>
+                    </div>
+                    <div className="detail-row">
+                      <div className="detail-item">
+                        <span className="detail-icon">⏰</span>
+                        <span><strong>Duration:</strong> {request.duration || 0} days</span>
+                      </div>
+                      <div className="detail-item">
+                        <span className="detail-icon">📅</span>
+                        <span><strong>Start Date:</strong> {request.startDate ? new Date(request.startDate).toLocaleDateString() : 'TBD'}</span>
+                      </div>
+                    </div>
+                    {request.farmSize && (
+                      <div className="detail-row">
+                        <div className="detail-item">
+                          <span className="detail-icon">📏</span>
+                          <span><strong>Farm Size:</strong> {request.farmSize} acres</span>
+                        </div>
+                        {request.requirements && (
+                          <div className="detail-item">
+                            <span className="detail-icon">📋</span>
+                            <span><strong>Requirements:</strong> {request.requirements}</span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  {request.status === 'accepted' && (
+                    <div className="acceptance-message">
+                      ✅ You accepted this work request on {new Date(request.respondedAt).toLocaleDateString()}
+                      {request.farmer?.phone && (
+                        <div className="contact-info-box">
+                          <strong>📱 Contact Farmer:</strong> {request.farmer.phone}
+                          {request.farmer.email && ` • ${request.farmer.email}`}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {request.status === 'rejected' && (
+                    <div className="rejection-message">
+                      ❌ You rejected this work request on {new Date(request.respondedAt).toLocaleDateString()}
+                    </div>
+                  )}
+
+                  {request.status === 'pending' && (
+                    <div className="pending-message">
+                      ⏳ This request is pending. Go to <a href="/labour/work-requests">Work Requests</a> to respond.
+                    </div>
+                  )}
+                </div>
+              ))}
+            </>
+          )}
+
+          {/* Job Applications Section */}
+          {filteredApplications.length > 0 && (
+            <>
+              {filteredWorkRequests.length > 0 && (
+                <div className="section-divider">
+                  <h2>📋 Job Applications</h2>
+                </div>
+              )}
+              {filteredApplications.map((application) => (
+            <div key={`app-${application._id}`} className="application-card">
               <div className="application-header">
                 <div className="application-title">
                   <h3>{application.job?.title || 'Job Title'}</h3>
@@ -316,6 +445,8 @@ const MyApplications = () => {
               )}
             </div>
           ))}
+            </>
+          )}
         </div>
       )}
       </div>

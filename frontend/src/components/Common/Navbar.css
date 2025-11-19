@@ -29,13 +29,14 @@
 }
 
 .navbar-container {
-  max-width: 1400px;
+  max-width: 1600px;
   margin: 0 auto;
-  padding: 0 30px;
+  padding: 0 25px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 75px;
+  gap: 20px;
 }
 
 .navbar-logo {
@@ -65,13 +66,13 @@
 
 
 .logo-text {
-  font-size: 2.2rem;
+  font-size: 2rem;
   font-weight: 800;
   background: linear-gradient(135deg, #fff 0%, #a5d6a7 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 
 .navbar-menu {
@@ -79,8 +80,9 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  gap: 10px;
+  gap: 8px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .navbar-item {
@@ -90,7 +92,7 @@
 .navbar-link {
   color: white;
   text-decoration: none;
-  padding: 12px 24px;
+  padding: 10px 20px;
   display: block;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   border-radius: 30px;
@@ -98,11 +100,12 @@
   background: rgba(255, 255, 255, 0.08);
   border: 2px solid rgba(255, 255, 255, 0.15);
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.95rem;
   position: relative;
   overflow: hidden;
   letter-spacing: 0.3px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  white-space: nowrap;
 }
 
 .navbar-link::before {
@@ -199,7 +202,7 @@
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
   backdrop-filter: blur(15px);
   border: 2px solid rgba(255, 255, 255, 0.3);
-  padding: 10px 20px !important;
+  padding: 8px 18px !important;
   border-radius: 30px;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -241,14 +244,15 @@
 .logout-btn {
   background: linear-gradient(135deg, #d32f2f 0%, #f44336 100%);
   color: white;
-  padding: 12px 28px;
+  padding: 10px 24px;
   border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: 30px;
   cursor: pointer;
   font-weight: 700;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.8px;
+  font-size: 0.9rem;
   box-shadow: 0 6px 20px rgba(211, 47, 47, 0.4);
   position: relative;
   overflow: hidden;
@@ -303,6 +307,40 @@
   transform: scale(1.1) rotate(15deg);
   border-color: rgba(255, 255, 255, 0.4);
   box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
+}
+
+@media (max-width: 1200px) {
+  .navbar-container {
+    padding: 0 15px;
+    gap: 10px;
+  }
+
+  .navbar-link {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+
+  .logo-text {
+    font-size: 1.8rem;
+  }
+
+  .logo-icon {
+    width: 60px;
+    height: 55px;
+  }
+
+  .user-profile {
+    padding: 6px 14px !important;
+  }
+
+  .user-name {
+    font-size: 0.9rem;
+  }
+
+  .logout-btn {
+    padding: 8px 20px;
+    font-size: 0.85rem;
+  }
 }
 
 @media (max-width: 768px) {

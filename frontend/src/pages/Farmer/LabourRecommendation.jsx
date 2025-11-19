@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { labourAPI } from '../../services/api';
+import { labourAPI, workRequestAPI } from '../../services/api';
 import Navbar from '../../components/Common/Navbar';
 import './LabourRecommendation.css';
 
@@ -28,6 +28,21 @@ const LabourRecommendation = () => {
   const [mlPrediction, setMlPrediction] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  
+  // Work request modal state
+  const [showRequestModal, setShowRequestModal] = useState(false);
+  const [selectedLabour, setSelectedLabour] = useState(null);
+  const [requestForm, setRequestForm] = useState({
+    jobType: '',
+    cropType: '',
+    farmSize: '',
+    duration: '',
+    wage: '',
+    startDate: '',
+    requirements: '',
+    message: ''
+  });
+  const [sendingRequest, setSendingRequest] = useState(false);
 
   const jobTypes = ['Plowing', 'Sowing', 'Harvesting', 'Irrigation', 'Weeding', 'General Labor', 'Pesticide Application', 'Others'];
   const cropTypes = ['Rice', 'Wheat', 'Cotton', 'Sugarcane', 'Maize', 'Soybean', 'Vegetables', 'Fruits'];
@@ -100,6 +115,67 @@ const LabourRecommendation = () => {
     if (score >= 90) return '#4caf50';
     if (score >= 75) return '#ff9800';
     return '#f44336';
+  };
+
+  const handleOpenRequestModal = (labour) => {
+    setSelectedLabour(labour);
+    setRequestForm({
+      jobType: requirements.jobType || '',
+      cropType: requirements.Crop || '',
+      farmSize: requirements.Farm_Size_Acre || '',
+      duration: '',
+      wage: '',
+      startDate: '',
+      requirements: requirements.skills || '',
+      message: ''
+    });
+    setShowRequestModal(true);
+  };
+
+  const handleCloseRequestModal = () => {
+    setShowRequestModal(false);
+    setSelectedLabour(null);
+    setRequestForm({
+      jobType: '',
+      cropType: '',
+      farmSize: '',
+      duration: '',
+      wage: '',
+      startDate: '',
+      requirements: '',
+      message: ''
+    });
+  };
+
+  const handleRequestFormChange = (e) => {
+    setRequestForm({
+      ...requestForm,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSendRequest = async (e) => {
+    e.preventDefault();
+    setSendingRequest(true);
+    
+    try {
+      const requestData = {
+        labourId: selectedLabour.id || selectedLabour._id,
+        ...requestForm
+      };
+      
+      const response = await workRequestAPI.sendRequest(requestData);
+      
+      if (response.data.success) {
+        alert('Work request sent successfully! The labour user will be notified.');
+        handleCloseRequestModal();
+      }
+    } catch (err) {
+      console.error('Send request error:', err);
+      alert(err.response?.data?.message || 'Failed to send work request. Please try again.');
+    } finally {
+      setSendingRequest(false);
+    }
   };
 
   return (
@@ -350,7 +426,7 @@ const LabourRecommendation = () => {
             <div className="stat-box">
               <span className="stat-icon">📏</span>
               <div>
-                <h3>{mlPrediction.labourPerAcre || mlPrediction.labourPerHectare || 'N/A'}</h3>
+                <h3>{mlPrediction.labourPerAcre ? Math.round(mlPrediction.labourPerAcre) : mlPrediction.labourPerHectare ? Math.round(mlPrediction.labourPerHectare) : 'N/A'}</h3>
                 <p>Workers per Acre</p>
               </div>
             </div>
@@ -420,6 +496,21 @@ const LabourRecommendation = () => {
 
                 <div className="labour-details">
                   <div className="detail-item">
+                    <span className="detail-icon">📍</span>
+                    <span><strong>Location:</strong> {location}</span>
+                  </div>
+
+                  <div className="detail-item">
+                    <span className="detail-icon">💼</span>
+                    <span><strong>Experience:</strong> {experience} years</span>
+                  </div>
+
+                  <div className="detail-item">
+                    <span className="detail-icon">✅</span>
+                    <span><strong>Completed Jobs:</strong> {completedJobs}</span>
+                  </div>
+
+                  <div className="detail-item">
                     <span className="detail-icon">🎯</span>
                     <div>
                       <strong>Skills:</strong>
@@ -429,21 +520,6 @@ const LabourRecommendation = () => {
                         ))}
                       </div>
                     </div>
-                  </div>
-
-                  <div className="detail-item">
-                    <span className="detail-icon">💼</span>
-                    <span><strong>Experience:</strong> {experience} years</span>
-                  </div>
-
-                  <div className="detail-item">
-                    <span className="detail-icon">📍</span>
-                    <span><strong>Location:</strong> {location}</span>
-                  </div>
-
-                  <div className="detail-item">
-                    <span className="detail-icon">✅</span>
-                    <span><strong>Completed Jobs:</strong> {completedJobs}</span>
                   </div>
 
                   <div className="detail-item">
@@ -462,12 +538,172 @@ const LabourRecommendation = () => {
                 </div>
 
                 <div className="labour-actions">
-                  <button className="btn-view-profile">View Profile</button>
-                  <button className="btn-contact">Contact Now</button>
+                  {availability.toLowerCase() === 'available' && (
+                    <button 
+                      className="btn-contact"
+                      onClick={() => handleOpenRequestModal(labour)}
+                    >
+                      Send Request
+                    </button>
+                  )}
                 </div>
               </div>
               );
             })}
+          </div>
+        </div>
+      )}
+
+      {/* Work Request Modal */}
+      {showRequestModal && selectedLabour && (
+        <div className="modal-overlay" onClick={handleCloseRequestModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>📝 Send Work Request</h2>
+              <button className="modal-close" onClick={handleCloseRequestModal}>×</button>
+            </div>
+
+            <div className="modal-body">
+              <div className="labour-summary">
+                <div className="labour-avatar-small">
+                  <span>{String(selectedLabour.name || selectedLabour.fullName || 'L').charAt(0).toUpperCase()}</span>
+                </div>
+                <div>
+                  <h3>{selectedLabour.name || selectedLabour.fullName}</h3>
+                  <p>📍 {selectedLabour.location} | 💼 {selectedLabour.experience} years exp</p>
+                </div>
+              </div>
+
+              <form onSubmit={handleSendRequest} className="request-form">
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Job Type *</label>
+                    <select 
+                      name="jobType" 
+                      value={requestForm.jobType} 
+                      onChange={handleRequestFormChange}
+                      required
+                    >
+                      <option value="">Select job type</option>
+                      {jobTypes.map(type => (
+                        <option key={type} value={type}>{type}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="form-group">
+                    <label>Crop Type *</label>
+                    <select 
+                      name="cropType" 
+                      value={requestForm.cropType} 
+                      onChange={handleRequestFormChange}
+                      required
+                    >
+                      <option value="">Select crop</option>
+                      {cropTypes.map(crop => (
+                        <option key={crop} value={crop}>{crop}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Farm Size (Acres) *</label>
+                    <input
+                      type="number"
+                      name="farmSize"
+                      value={requestForm.farmSize}
+                      onChange={handleRequestFormChange}
+                      min="0.1"
+                      step="0.1"
+                      placeholder="e.g., 30"
+                      required
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Duration (Days) *</label>
+                    <input
+                      type="number"
+                      name="duration"
+                      value={requestForm.duration}
+                      onChange={handleRequestFormChange}
+                      min="1"
+                      placeholder="e.g., 7"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Wage (₹/Day) *</label>
+                    <input
+                      type="number"
+                      name="wage"
+                      value={requestForm.wage}
+                      onChange={handleRequestFormChange}
+                      min="1"
+                      placeholder="e.g., 500"
+                      required
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Start Date *</label>
+                    <input
+                      type="date"
+                      name="startDate"
+                      value={requestForm.startDate}
+                      onChange={handleRequestFormChange}
+                      min={new Date().toISOString().split('T')[0]}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label>Specific Requirements</label>
+                  <textarea
+                    name="requirements"
+                    value={requestForm.requirements}
+                    onChange={handleRequestFormChange}
+                    rows="3"
+                    placeholder="e.g., Experience with modern farming equipment, punctuality required"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Personal Message</label>
+                  <textarea
+                    name="message"
+                    value={requestForm.message}
+                    onChange={handleRequestFormChange}
+                    rows="3"
+                    placeholder="Add a personal message to the labour..."
+                  />
+                </div>
+
+                <div className="modal-actions">
+                  <button 
+                    type="button" 
+                    onClick={handleCloseRequestModal}
+                    className="btn-cancel"
+                    disabled={sendingRequest}
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    type="submit" 
+                    className="btn-submit"
+                    disabled={sendingRequest}
+                  >
+                    {sendingRequest ? 'Sending...' : 'Send Request'}
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       )}

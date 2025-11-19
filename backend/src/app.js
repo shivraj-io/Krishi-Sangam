@@ -13,6 +13,7 @@ const LabourRoutes = require("./routes/predictLabourRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const payoutRoutes = require("./routes/payoutRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
+const workRequestRoutes = require("./routes/workRequestRoutes");
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use("/api/labour", LabourRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/payouts", payoutRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/work-requests", workRequestRoutes);
 
 
 

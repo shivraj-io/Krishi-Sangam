@@ -76,6 +76,7 @@ const registerUser = async (req, res) => {
       role,
       skills,
       address: req.body.address,
+      location: req.body.location, // Add location field
       farmSize: req.body.farmSize,
       crops: req.body.crops
     });

@@ -11,6 +11,9 @@ const CreateJob = () => {
     description: '',
     type: '',
     cropType: '',
+    state: '',
+    district: '',
+    village: '',
     location: '',
     duration: '',
     workersNeeded: 1,
@@ -23,10 +26,24 @@ const CreateJob = () => {
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({
+    const { name, value } = e.target;
+    const newFormData = {
       ...formData,
-      [e.target.name]: e.target.value,
-    });
+      [name]: value,
+    };
+
+    // Auto-build location string from state, district, village
+    if (['state', 'district', 'village'].includes(name)) {
+      const locationParts = [
+        name === 'village' ? value : newFormData.village,
+        name === 'district' ? value : newFormData.district,
+        name === 'state' ? value : newFormData.state,
+      ].filter(part => part.trim() !== '');
+      
+      newFormData.location = locationParts.join(', ');
+    }
+
+    setFormData(newFormData);
   };
 
   const handleSubmit = async (e) => {
@@ -115,16 +132,44 @@ const CreateJob = () => {
                 ))}
               </select>
             </div>
+          </div>
 
+          <div className="form-section-title">📍 Location Details</div>
+          <div className="form-row">
             <div className="form-group">
-              <label>Location *</label>
+              <label>State *</label>
               <input
                 type="text"
-                name="location"
-                value={formData.location}
+                name="state"
+                value={formData.state}
                 onChange={handleChange}
                 required
-                placeholder="Enter location"
+                placeholder="Enter state"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>District *</label>
+              <input
+                type="text"
+                name="district"
+                value={formData.district}
+                onChange={handleChange}
+                required
+                placeholder="Enter district"
+              />
+            </div>
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label>City / Village</label>
+              <input
+                type="text"
+                name="village"
+                value={formData.village}
+                onChange={handleChange}
+                placeholder="Enter city or village (optional)"
               />
             </div>
           </div>

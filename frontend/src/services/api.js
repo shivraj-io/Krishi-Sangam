@@ -106,4 +106,13 @@ export const notificationAPI = {
   deleteNotification: (notificationId) => api.delete(`/notifications/${notificationId}`),
 };
 
+// Work Request APIs
+export const workRequestAPI = {
+  sendRequest: (data) => api.post('/work-requests/send', data),
+  getReceivedRequests: () => api.get('/work-requests/received'),
+  getSentRequests: () => api.get('/work-requests/sent'),
+  respondToRequest: (data) => api.post('/work-requests/respond', data),
+  cancelRequest: (requestId) => api.delete(`/work-requests/${requestId}/cancel`),
+};
+
 export default api;

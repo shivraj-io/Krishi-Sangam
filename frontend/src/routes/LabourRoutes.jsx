@@ -4,6 +4,7 @@ import LabourDashboard from '../pages/Labour/LabourDashboard';
 import AllJobs from '../pages/Labour/AllJobs';
 import MyApplications from '../pages/Labour/MyApplications';
 import LabourProfile from '../pages/Labour/LabourProfile';
+import WorkRequests from '../pages/Labour/WorkRequests';
 
 const LabourRoutes = () => {
   return (
@@ -37,6 +38,14 @@ const LabourRoutes = () => {
         element={
           <ProtectedRoute allowedUserType="labour">
             <LabourProfile />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/labour/work-requests"
+        element={
+          <ProtectedRoute allowedUserType="labour">
+            <WorkRequests />
           </ProtectedRoute>
         }
       />

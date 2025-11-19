@@ -87,6 +87,11 @@ const LabourDashboard = () => {
             <h3>My Applications</h3>
             <p>Track your job applications</p>
           </Link>
+          <Link to="/labour/work-requests" className="action-card">
+            <div className="action-icon">📬</div>
+            <h3>Work Requests</h3>
+            <p>View and manage work requests</p>
+          </Link>
         </div>
       </div>
 
